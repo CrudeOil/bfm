@@ -12,3 +12,10 @@ In order to limit the scope of this project, five features are listed:
 * Interacting with flowchart to list details such as duration on steps or dependencies for methods
 * Custom views to plan workflows
 * Emulation of workflow to predict and optimize performance
+
+## Deploying
+
+1. Type ```tsc``` in this project directory to compile typescript.
+2. Type ```gulp deploy``` to deploy to ./out
+   * You can set the outdir in the gulpfile
+3. You will probably have to type gulp deploy again because it does not inject all dependencies on the first go
