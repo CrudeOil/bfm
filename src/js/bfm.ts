@@ -9,6 +9,23 @@ $().ready(() => {
 
     let flowChart: Flow.Chart = new Flow.Chart(canvasDiv, canvas);
 
-    flowChart.addNode("FASTQ", Flow.NodeType.data);
-    flowChart.addNode("FASTA", Flow.NodeType.data);
+    let lastNode: Flow.Node;
+
+    let addNodeBtn: HTMLLinkElement = <HTMLLinkElement>document.getElementById("addnodebtn");
+    addNodeBtn.onclick = () => {
+        let newNode: Flow.Node = flowChart.addNode(
+            Math.random().toString(),
+            Flow.NodeType.other,
+            (Math.random() * (canvas.clientWidth - 100) + 100) / 2,
+            (Math.random() * (canvas.clientHeight - 100) + 100) / 2
+        );
+        flowChart.addEdge(lastNode, newNode);
+        lastNode = newNode;
+    }
+
+    let n1: Flow.Node = flowChart.addNode("FASTQ", Flow.NodeType.data, 10, 0);
+    let n2: Flow.Node = flowChart.addNode("FASTA", Flow.NodeType.data, -10, 0);
+    lastNode = n2;
+
+    let e1: Flow.Edge = flowChart.addEdge(n1, n2);
 });
