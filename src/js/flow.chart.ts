@@ -6,16 +6,18 @@ namespace Flow {
     }
 
     export class Edge {
-        nodes: Node[];
-
         public static SpringFriction = 1;
         public static SpringStrength = 0.5;
         public static SpringLength = 250;
 
-        public constructor(n0: Node, n1: Node) {
+        nodes: Node[];
+        color: string|CanvasGradient|CanvasPattern;
+
+        public constructor(n0: Node, n1: Node, color: string = "#FFFFFF") {
             this.nodes = [];
             this.nodes[0] = n0;
             this.nodes[1] = n1;
+            this.color = color;
         }
 
         public getNodes(): Node[] {
@@ -53,11 +55,13 @@ namespace Flow {
         name: string;
         type: NodeType;
         pos: number[];
+        color: string|CanvasGradient|CanvasPattern;
 
-        public constructor(name: string, type: NodeType) {
+        public constructor(name: string, type: NodeType, color="#0000FF") {
             this.name = name;
             this.type = type;
             this.pos = [0,0,0];
+            this.color = color;
         }
 
         public getPosX(): number {
@@ -85,6 +89,11 @@ namespace Flow {
     }
 
     export class Chart {
+        private static NodeSize = {
+            width: 100,
+            height: 60
+        };
+
         private canvasParent: HTMLDivElement;
         private canvas: HTMLCanvasElement;
         private ctx: CanvasRenderingContext2D;
@@ -96,10 +105,6 @@ namespace Flow {
         private zoomScale: number;
         private drag: boolean = false;
 
-        private static NodeSize = {
-            width: 100,
-            height: 60
-        }
 
         public constructor(canvasParent: HTMLDivElement, canvas: HTMLCanvasElement) {
             this.canvasParent = canvasParent;
@@ -168,16 +173,31 @@ namespace Flow {
 
         private draw = () => {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-            this.ctx.fillStyle ="#0000FF";
 
-            for (let i: number = 0; i < this.nodes.length; i++) {
+            for (var i: number = 0; i < this.edges.length; i++ ) {
+                this.ctx.strokeStyle = this.edges[i].color;
+                this.ctx.beginPath();
+                this.ctx.moveTo(
+                    this.edges[i].getNodes()[0].getPosX() + this.dragOffset.x,
+                    this.edges[i].getNodes()[0].getPosY() + this.dragOffset.y
+                );
+                this.ctx.lineTo(
+                    this.edges[i].getNodes()[1].getPosX() + this.dragOffset.x,
+                    this.edges[i].getNodes()[1].getPosY() + this.dragOffset.y
+                );
+                this.ctx.stroke();
+            }
+
+            for (var i: number = 0; i < this.nodes.length; i++) {
+                this.ctx.fillStyle = this.nodes[i].color;
                 this.ctx.fillRect(
                     this.nodes[i].getPosX() + this.dragOffset.x - Chart.NodeSize.width / 2 * this.zoomScale,
-                    this.nodes[i].getPosY() + this.dragOffset.y - Chart.NodeSize.height - 2 * this.zoomScale,
+                    this.nodes[i].getPosY() + this.dragOffset.y - Chart.NodeSize.height / 2 * this.zoomScale,
                     Chart.NodeSize.width * this.zoomScale,
                     Chart.NodeSize.height * this.zoomScale
                 );
             }
+
             this.afterDraw();
         }
 
