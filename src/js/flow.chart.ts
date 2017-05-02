@@ -42,7 +42,8 @@ namespace Flow {
 
         private nodes: Flow.Node[];
 
-        private offset: {x:number,y:number};
+        private dragOffset: {x:number,y:number};
+        private zoomOffset: number;
 
         private drag: boolean = false;
 
@@ -62,19 +63,23 @@ namespace Flow {
             }
             canvas.onmousemove = (e: MouseEvent) => {
                 if (this.drag) {
-                    this.offset.x += e.movementX;
-                    this.offset.y += e.movementY;
+                    this.dragOffset.x += e.movementX;
+                    this.dragOffset.y += e.movementY;
                 }
+            }
+            canvas.onmousewheel = (e: WheelEvent) => {
+                this.zoomOffset = e.wheelDelta === 120 ? this.zoomOffset *= 2 : this.zoomOffset /= 2;
             }
 
             this.ctx = canvas.getContext("2d");
 
             this.nodes = [];
 
-            this.offset = {
+            this.dragOffset = {
                 x: 0,
                 y: 0
             };
+            this.zoomOffset = 1;
 
             window.requestAnimationFrame(this.draw);
         }
@@ -88,10 +93,10 @@ namespace Flow {
             this.ctx.fillStyle ="#0000FF";
             for (let i: number = 0; i < this.nodes.length; i++) {
                 this.ctx.fillRect(
-                    this.nodes[i].getPosX() + this.offset.x,
-                    this.nodes[i].getPosY() + this.offset.y,
-                    100,
-                    100
+                    this.nodes[i].getPosX() + this.dragOffset.x,
+                    this.nodes[i].getPosY() + this.dragOffset.y,
+                    100 * this.zoomOffset,
+                    60 * this.zoomOffset
                 );
             }
             window.requestAnimationFrame(this.draw);
