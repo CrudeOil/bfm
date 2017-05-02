@@ -24,7 +24,7 @@ namespace Flow {
             return [this.nodes[0], this.nodes[1]];
         }
 
-        public static CalculateSpring(n1: Node, n2: Node, zoomScale: number = 1): number[] {
+        public static CalculateSpring(n1: Node, n2: Node, zoomScale: number = 1, repelOnly = false): number[] {
             let dx = n1.getPosX() - n2.getPosX();
             let dy = n1.getPosY() - n2.getPosY();
             let d = Math.sqrt(dx**2 + dy**2);
@@ -36,11 +36,12 @@ namespace Flow {
             }
 
             d = Math.abs(d/zoomScale);
+
             let f = 0;
             let fx = 0;
             let fy = 0;
 
-            if (d > 10) {
+            if (d > 10 && !(repelOnly && Edge.SpringLength - d < 0)) {
                 f = (Edge.SpringLength - d) * Edge.SpringStrength;
                 fx = ((dx / d) * f) / 2;
                 fy = ((dy / d) * f) / 2;
@@ -159,7 +160,7 @@ namespace Flow {
 
         private beforeDraw = () => {
             var springForces: number[];
-            for (let i: number = 0; i < this.edges.length; i++) {
+            for (var i: number = 0; i < this.edges.length; i++) {
                 springForces = Edge.CalculateSpring(
                     this.edges[i].getNodes()[0],
                     this.edges[i].getNodes()[1],
@@ -167,6 +168,19 @@ namespace Flow {
                 );
                 this.edges[i].getNodes()[0].move(springForces[1], springForces[2]);
                 this.edges[i].getNodes()[1].move(-springForces[1], -springForces[2]);
+            }
+
+            for (var i: number = 0; i < this.nodes.length; i++) {
+                for (var j: number = i+1; j < this.nodes.length; j++) {
+                    springForces = Edge.CalculateSpring(
+                        this.nodes[i],
+                        this.nodes[j],
+                        this.zoomScale,
+                        true
+                    );
+                    this.nodes[i].move(springForces[1], springForces[2]);
+                    this.nodes[j].move(-springForces[1], -springForces[2]);
+                }
             }
             this.draw();
         }
