@@ -13,6 +13,9 @@ In order to limit the scope of this project, five features are listed:
 * Custom views to plan workflows
 * Emulation of workflow to predict and optimize performance
 
+## Developing
+The project is set up such that you can host the project on a webserver and navigate to the src/ directory. As long as you have installed the npm packages this should work just fine.
+
 ## Deploying
 
 1. Type ```tsc``` in this project directory to compile typescript.
