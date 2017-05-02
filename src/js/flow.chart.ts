@@ -24,7 +24,7 @@ namespace Flow {
             return [this.nodes[0], this.nodes[1]];
         }
 
-        public static CalculateSpring(n1: Node, n2: Node, zoomScale: number = 1, repelOnly = false): number[] {
+        public static CalculateSpring(n1: Node, n2: Node, zoomScale = 1, repelOnly = false): number[] {
             let dx = n1.getPosX() - n2.getPosX();
             let dy = n1.getPosY() - n2.getPosY();
             let d = Math.sqrt(dx**2 + dy**2);
@@ -52,17 +52,27 @@ namespace Flow {
         }
     }
 
+    export enum NodeState {
+        active,
+        disabled,
+        dragging,
+        selected
+    }
+
     export class Node {
+        public static Width = 100;
+        public static Height = 60;
+
         name: string;
         type: NodeType;
         pos: number[];
-        color: string|CanvasGradient|CanvasPattern;
+        state: NodeState;
 
-        public constructor(name: string, type: NodeType, color="#0000FF") {
+        public constructor(name: string, type: NodeType) {
             this.name = name;
             this.type = type;
             this.pos = [0,0,0];
-            this.color = color;
+            this.state = NodeState.active;
         }
 
         public getPosX(): number {
@@ -77,59 +87,180 @@ namespace Flow {
             return this.pos[2];
         }
 
+        public setState(state: NodeState) {
+            this.state = state;
+        }
+
+        public getState(): NodeState {
+            return this.state;
+        }
+
+        public getColor(): string|CanvasGradient|CanvasPattern {
+            switch(this.state) {
+                case NodeState.active:
+                    return "#0000FF";
+                case NodeState.disabled:
+                    return "#A5A5A5";
+                case NodeState.dragging:
+                    return "#0000A5";
+                case NodeState.selected:
+                    return "#A5A5FF";
+                default:
+                    return "#FF0000";
+            }
+        }
+
         public setPos(x: number, y: number, z?: number): void {
             this.pos[0] = x;
             this.pos[1] = y;
             this.pos[2] = z? z : this.pos[2];
         }
 
-        public move(dx: number, dy: number): void {
-            this.pos[0] += dx;
-            this.pos[1] += dy;
+        public move(dx: number, dy: number, ignoreState = false): void {
+            if (ignoreState || (this.state !== NodeState.dragging)) {
+                this.pos[0] += dx;
+                this.pos[1] += dy;
+            }
+        }
+
+        public static GetNodeAt(x: number, y: number, nodes: Node[], dragOffset: {x:number, y:number}, zoomScale: number): Node {
+            let x1, x2, y1, y2: number;
+
+            for (var i = 0; i < nodes.length; i++) {
+                x1 = nodes[i].getPosX() + dragOffset.x - Node.Width / 2 * zoomScale;
+                x2 = x1 + Node.Width*zoomScale;
+                y1 = nodes[i].getPosY() + dragOffset.y - Node.Height / 2 * zoomScale;
+                y2 = y1 + Node.Height*zoomScale;
+                if (x > x1 && x < x2 && y > y1 && y < y2) {
+                    return nodes[i];
+                }
+            }
+            return undefined;
+        }
+
+        public toString() {
+            return `x: ${this.getPosX()} y: ${this.getPosY()}`;
         }
     }
 
     export class Chart {
-        private static NodeSize = {
-            width: 100,
-            height: 60
-        };
 
         private canvasParent: HTMLDivElement;
         private canvas: HTMLCanvasElement;
         private ctx: CanvasRenderingContext2D;
 
+        // collections of edges and nodes
         private nodes: Flow.Node[];
         private edges: Flow.Edge[];
 
+        // vars for drawing stuff on canvas relative to view
         private dragOffset: {x:number,y:number};
         private zoomScale: number;
-        private drag: boolean = false;
 
+        // movement of canvas and nodes
+        private canvasDrag: boolean = false;
+        private canvasDragStart: {x:number, y:number};
+        private nodeDrag: boolean = false;
+        private nodeDragStart: {x:number, y:number};
+        private selectedNodes: Node[] = []
 
         public constructor(canvasParent: HTMLDivElement, canvas: HTMLCanvasElement) {
             this.canvasParent = canvasParent;
             this.canvas = canvas;
             canvas.height = canvasParent.clientHeight;
             canvas.width = canvasParent.clientWidth;
-            canvas.onmousedown = () => {
-                this.drag = true;
-            }
-            canvas.onmouseup = () => {
-                this.drag = false;
-            }
+            canvas.onmousedown = (e: MouseEvent) => {
+                let canvasRect = this.canvas.getBoundingClientRect();
+                let x = e.clientX - canvasRect.left;
+                let y = e.clientY - canvasRect.top;
+                let clickedNode = Node.GetNodeAt(x, y, this.nodes, this.dragOffset, this.zoomScale);
+                if (clickedNode) {
+                    this.nodeDragStart = {x: e.x, y: e.y}
+                }else{
+                    this.canvasDrag = true;
+                    this.canvasDragStart = {x: e.x, y: e.y}
+                }
+            };
+            canvas.onmouseup = (e: MouseEvent) => {
+                let canvasRect = this.canvas.getBoundingClientRect();
+                let x = e.clientX - canvasRect.left;
+                let y = e.clientY - canvasRect.top;
+                let clickedNode = Node.GetNodeAt(x, y, this.nodes, this.dragOffset, this.zoomScale);
+                this.canvasDrag = false;
+                for (var i = 0; i < this.selectedNodes.length; i++) {
+                    this.selectedNodes[i].setState(NodeState.selected);
+                }
+                if (clickedNode && !this.nodeDrag) {
+                    if (e.shiftKey) {
+                        var i = this.selectedNodes.indexOf(clickedNode);
+                        if (i === -1) {
+                            this.selectedNodes.push(clickedNode);
+                            clickedNode.setState(NodeState.selected);
+                        }else{
+                            this.selectedNodes.splice(i, 1);
+                            clickedNode.setState(NodeState.active);
+                        }
+                    }else{
+                        for (var i = 0; i < this.selectedNodes.length; i++) {
+                            this.selectedNodes[i].setState(NodeState.active);
+                        }
+                        this.selectedNodes = [clickedNode];
+                        clickedNode.setState(NodeState.selected);
+                    }
+                }else{
+                    this.nodeDrag = false;
+                    if(this.canvasDragStart.x === e.x && this.canvasDragStart.y === e.y && !e.shiftKey) {
+                        for (var i = 0; i < this.selectedNodes.length; i++) {
+                            this.selectedNodes[i].setState(NodeState.active);
+                        }
+                        this.selectedNodes = [];
+                    }
+                }
+            };
             canvas.onmouseleave = () => {
-                this.drag = false;
-            }
+                this.canvasDrag = false;
+                this.nodeDrag = false;
+                for (var i = 0; i < this.selectedNodes.length; i++) {
+                    this.selectedNodes[i].setState(NodeState.selected);
+                }
+            };
             canvas.onmousemove = (e: MouseEvent) => {
-                if (this.drag) {
+                if (this.canvasDrag) {
                     this.dragOffset.x += e.movementX;
                     this.dragOffset.y += e.movementY;
                 }
-            }
+                if (this.nodeDrag) {
+                    for (var i = 0; i < this.selectedNodes.length; i++) {
+                        this.selectedNodes[i].move(e.movementX, e.movementY, true);
+                    }
+                }else{
+                    let canvasRect = this.canvas.getBoundingClientRect();
+                    let x = e.clientX - canvasRect.left;
+                    let y = e.clientY - canvasRect.top;
+                    let clickedNode = Node.GetNodeAt(x, y, this.nodes, this.dragOffset, this.zoomScale);
+
+                    if (clickedNode && e.buttons === 1 && (e.x - this.nodeDragStart.x < 5 || e.y - this.nodeDragStart.y)) {
+                        this.nodeDrag = true;
+
+                        var i = this.selectedNodes.indexOf(clickedNode);
+                        if (i === -1) {
+                            for (var i = 0; i < this.selectedNodes.length; i++) {
+                                this.selectedNodes[i].setState(NodeState.active);
+                            }
+                            this.selectedNodes = [clickedNode];
+                            clickedNode.setState(NodeState.selected);
+                        }
+
+                        for (var i = 0; i < this.selectedNodes.length; i++) {
+                            this.selectedNodes[i].setState(NodeState.dragging);
+                            this.selectedNodes[i].move(e.x - this.nodeDragStart.x, e.y - this.nodeDragStart.y, true);
+                        }
+                    }
+                }
+            };
             canvas.onmousewheel = (e: WheelEvent) => {
                 this.zoomScale = e.wheelDelta === 120 ? this.zoomScale *= 2 : this.zoomScale /= 2;
-            }
+            };
 
             this.ctx = canvas.getContext("2d");
 
@@ -160,7 +291,7 @@ namespace Flow {
 
         private beforeDraw = () => {
             var springForces: number[];
-            for (var i: number = 0; i < this.edges.length; i++) {
+            for (var i = 0; i < this.edges.length; i++) {
                 springForces = Edge.CalculateSpring(
                     this.edges[i].getNodes()[0],
                     this.edges[i].getNodes()[1],
@@ -170,8 +301,8 @@ namespace Flow {
                 this.edges[i].getNodes()[1].move(-springForces[1], -springForces[2]);
             }
 
-            for (var i: number = 0; i < this.nodes.length; i++) {
-                for (var j: number = i+1; j < this.nodes.length; j++) {
+            for (var i = 0; i < this.nodes.length; i++) {
+                for (var j = i+1; j < this.nodes.length; j++) {
                     springForces = Edge.CalculateSpring(
                         this.nodes[i],
                         this.nodes[j],
@@ -188,7 +319,7 @@ namespace Flow {
         private draw = () => {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-            for (var i: number = 0; i < this.edges.length; i++ ) {
+            for (var i = 0; i < this.edges.length; i++ ) {
                 this.ctx.strokeStyle = this.edges[i].color;
                 this.ctx.beginPath();
                 this.ctx.moveTo(
@@ -202,13 +333,18 @@ namespace Flow {
                 this.ctx.stroke();
             }
 
-            for (var i: number = 0; i < this.nodes.length; i++) {
-                this.ctx.fillStyle = this.nodes[i].color;
+            for (var i = 0; i < this.nodes.length; i++) {
+                this.ctx.fillStyle = this.nodes[i].getColor();
                 this.ctx.fillRect(
-                    this.nodes[i].getPosX() + this.dragOffset.x - Chart.NodeSize.width / 2 * this.zoomScale,
-                    this.nodes[i].getPosY() + this.dragOffset.y - Chart.NodeSize.height / 2 * this.zoomScale,
-                    Chart.NodeSize.width * this.zoomScale,
-                    Chart.NodeSize.height * this.zoomScale
+                    this.nodes[i].getPosX() + this.dragOffset.x - Node.Width / 2 * this.zoomScale,
+                    this.nodes[i].getPosY() + this.dragOffset.y - Node.Height / 2 * this.zoomScale,
+                    Node.Width * this.zoomScale,
+                    Node.Height * this.zoomScale
+                );
+                this.ctx.strokeText(
+                    this.nodes[i].name,
+                    this.nodes[i].getPosX() + this.dragOffset.x - Node.Height / 2 * this.zoomScale + 10,
+                    this.nodes[i].getPosY() + this.dragOffset.y
                 );
             }
 
