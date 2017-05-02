@@ -289,6 +289,15 @@ namespace Flow {
             return newEdge;
         }
 
+        // does not check for existing connection
+        public connectSelected(): void {
+            for (var i = 0; i < this.selectedNodes.length; i++) {
+                for (var j = i + 1; j < this.selectedNodes.length; j++) {
+                    this.addEdge(this.selectedNodes[i], this.selectedNodes[j]);
+                }
+            }
+        }
+
         private beforeDraw = () => {
             var springForces: number[];
             for (var i = 0; i < this.edges.length; i++) {
@@ -347,6 +356,8 @@ namespace Flow {
                     this.nodes[i].getPosY() + this.dragOffset.y
                 );
             }
+            this.ctx.strokeText("Press 'a' to add node", 100, 50);
+            this.ctx.strokeText("Press 'c' to connect nodes", 100, 80);
 
             this.afterDraw();
         }

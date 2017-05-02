@@ -9,23 +9,22 @@ $().ready(() => {
 
     let flowChart: Flow.Chart = new Flow.Chart(canvasDiv, canvas);
 
-    let lastNode: Flow.Node;
-
-    let addNodeBtn: HTMLLinkElement = <HTMLLinkElement>document.getElementById("addnodebtn");
-    addNodeBtn.onclick = () => {
-        let newNode: Flow.Node = flowChart.addNode(
-            Math.random().toString(),
-            Flow.NodeType.other,
-            (Math.random() * (canvas.clientWidth - 100) + 100) / 2,
-            (Math.random() * (canvas.clientHeight - 100) + 100) / 2
-        );
-        flowChart.addEdge(lastNode, newNode);
-        lastNode = newNode;
-    }
-
     let n1: Flow.Node = flowChart.addNode("FASTQ", Flow.NodeType.data, 10, 0);
     let n2: Flow.Node = flowChart.addNode("FASTA", Flow.NodeType.data, -10, 0);
-    lastNode = n2;
 
     let e1: Flow.Edge = flowChart.addEdge(n1, n2);
+
+    document.onkeyup = (e) => {
+        if (e.keyCode === 65) {
+            let newNode: Flow.Node = flowChart.addNode(
+                Math.random().toString(),
+                Flow.NodeType.other,
+                (Math.random() * (canvas.clientWidth)) - canvas.clientWidth/2,
+                (Math.random() * (canvas.clientHeight)) - canvas.clientHeight/2
+            );
+        }
+        if (e.keyCode === 67) {
+            flowChart.connectSelected();
+        }
+    }
 });
