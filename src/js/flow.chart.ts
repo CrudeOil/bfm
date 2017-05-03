@@ -17,8 +17,8 @@ namespace Flow {
         private edges: Flow.Edge[];
 
         // vars for drawing stuff on canvas relative to view
-        private dragOffset: {x:number,y:number};
-        private zoomScale: number;
+        private viewOffset: {x:number,y:number};
+        private viewScale: number;
 
         // movement of canvas and nodes
         private canvasDrag: boolean = false;
@@ -116,14 +116,14 @@ namespace Flow {
             // TODO: Multi-select?
             canvas.onmousemove = (e: MouseEvent) => {
                 if (this.canvasDrag) {
-                    this.dragOffset.x += e.movementX;
-                    this.dragOffset.y += e.movementY;
+                    this.viewOffset.x += e.movementX;
+                    this.viewOffset.y += e.movementY;
                 }
                 if (this.nodeDrag) {
                     for (var i = 0; i < this.selectedNodes.length; i++) {
                         // moving the actual nodes. speed is adjusted by zoomscale
                         // should always be true to mouse movement
-                        this.selectedNodes[i].move(e.movementX / this.zoomScale, e.movementY / this.zoomScale, true);
+                        this.selectedNodes[i].move(e.movementX / this.viewScale, e.movementY / this.viewScale, true);
                     }
                 }else{
                     let x = e.clientX - canvasRect.left;
@@ -155,13 +155,22 @@ namespace Flow {
 
             // do the zooming business
             canvas.onmousewheel = (e: WheelEvent) => {
+                let dOrigin: IPoint = {
+                    x: this.viewOffset.x - canvas.clientWidth / 2,
+                    y: this.viewOffset.y - canvas.clientHeight / 2
+                }
+
                 if (e.wheelDelta === 120) { // mwheelup
-                    if (this.zoomScale < 2**Chart.MaxZoomLevel) {
-                        this.zoomScale *= 2;
+                    if (this.viewScale < 2**Chart.MaxZoomLevel) {
+                        this.viewScale *= 2;
+                        this.viewOffset.x += dOrigin.x;
+                        this.viewOffset.y += dOrigin.y;
                     }
                 }else{ // mwheeldown
-                    if (this.zoomScale > 2**-Chart.MinZoomLevel) {
-                        this.zoomScale /= 2
+                    if (this.viewScale > 2**-Chart.MinZoomLevel) {
+                        this.viewOffset.x -= dOrigin.x/2;
+                        this.viewOffset.y -= dOrigin.y/2;
+                        this.viewScale /= 2
                     }
                 }
             };
@@ -171,11 +180,11 @@ namespace Flow {
             this.nodes = [];
             this.edges = [];
 
-            this.dragOffset = {
-                x: this.canvas.width/2,
-                y: this.canvas.height/2
+            this.viewOffset = {
+                x: this.canvas.clientWidth/2,
+                y: this.canvas.clientHeight/2
             };
-            this.zoomScale = 1;
+            this.viewScale = 1;
 
             window.requestAnimationFrame(this.draw);
         }
@@ -204,8 +213,8 @@ namespace Flow {
 
         public translateToCanvas(p: IPoint): IPoint {
             return {
-                x: p.x * this.zoomScale + this.dragOffset.x,
-                y: p.y * this.zoomScale + this.dragOffset.y
+                x: p.x * this.viewScale + this.viewOffset.x,
+                y: p.y * this.viewScale + this.viewOffset.y
             }
         }
 
@@ -215,10 +224,10 @@ namespace Flow {
 
             for (var i = 0; i < this.nodes.length; i++) {
                 canvasPoint = this.translateToCanvas(this.nodes[i].getPos());
-                x1 = canvasPoint.x - Node.Width / 2 * this.zoomScale;
-                x2 = x1 + Node.Width*this.zoomScale;
-                y1 = canvasPoint.y - Node.Height / 2 * this.zoomScale;
-                y2 = y1 + Node.Height*this.zoomScale;
+                x1 = canvasPoint.x - Node.Width / 2 * this.viewScale;
+                x2 = x1 + Node.Width*this.viewScale;
+                y1 = canvasPoint.y - Node.Height / 2 * this.viewScale;
+                y2 = y1 + Node.Height*this.viewScale;
                 if (x > x1 && x < x2 && y > y1 && y < y2) {
                     return this.nodes[i];
                 }
@@ -231,8 +240,7 @@ namespace Flow {
             for (var i = 0; i < this.edges.length; i++) {
                 springForces = Edge.CalculateSpring(
                     this.edges[i].getNodes()[0],
-                    this.edges[i].getNodes()[1],
-                    this.zoomScale
+                    this.edges[i].getNodes()[1]
                 );
                 this.edges[i].getNodes()[0].move(springForces[1], springForces[2]);
                 this.edges[i].getNodes()[1].move(-springForces[1], -springForces[2]);
@@ -243,7 +251,6 @@ namespace Flow {
                     springForces = Edge.CalculateSpring(
                         this.nodes[i],
                         this.nodes[j],
-                        this.zoomScale,
                         true
                     );
                     this.nodes[i].move(springForces[1], springForces[2]);
@@ -277,23 +284,25 @@ namespace Flow {
                 let nodePos = this.translateToCanvas(this.nodes[i].getPos());
                 this.ctx.fillStyle = this.nodes[i].getColor();
                 this.ctx.fillRect(
-                    nodePos.x - Node.Width / 2 * this.zoomScale,
-                    nodePos.y - Node.Height / 2 * this.zoomScale,
-                    Node.Width * this.zoomScale,
-                    Node.Height * this.zoomScale
+                    nodePos.x - Node.Width / 2 * this.viewScale,
+                    nodePos.y - Node.Height / 2 * this.viewScale,
+                    Node.Width * this.viewScale,
+                    Node.Height * this.viewScale
                 );
                 this.ctx.strokeText(
                     this.nodes[i].name,
-                    nodePos.x - Node.Height / 2 * this.zoomScale + 10,
+                    nodePos.x - Node.Height / 2 * this.viewScale + 10,
                     nodePos.y
                 );
             }
-            this.ctx.strokeText(`x: ${this.dragOffset.y - this.canvas.clientHeight/2}`, 100, 10);
-            this.ctx.strokeText(`y: ${this.dragOffset.x - this.canvas.clientWidth/2}`, 100, 30);
-            this.ctx.strokeText(`zoom: ${this.zoomScale}x`, 100, 50);
-            this.ctx.strokeText("Press 'a' to add node", 100, 70);
-            this.ctx.strokeText("Press 'b' to add node and connect to last", 100, 90);
-            this.ctx.strokeText("Press 'c' to connect nodes", 100, 110);
+            this.ctx.strokeText(`x: ${this.viewOffset.x - this.canvas.clientWidth/2}`, 100, 10);
+            this.ctx.strokeText(`y: ${this.viewOffset.y - this.canvas.clientHeight/2}`, 100, 30);
+            this.ctx.strokeText(`offsx: ${this.viewOffset.x}`, 100, 50);
+            this.ctx.strokeText(`offsy: ${this.viewOffset.y}`, 100, 70);
+            this.ctx.strokeText(`zoom: ${this.viewScale}x`, 100, 90);
+            this.ctx.strokeText("Press 'a' to add node", 100, 110);
+            this.ctx.strokeText("Press 'b' to add node and connect to last", 100, 130);
+            this.ctx.strokeText("Press 'c' to connect nodes", 100, 150);
 
             this.afterDraw();
         }

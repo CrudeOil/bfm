@@ -21,7 +21,7 @@ namespace Flow {
             return [this.nodes[0], this.nodes[1]];
         }
 
-        public static CalculateSpring(n1: Node, n2: Node, zoomScale = 1, repelOnly = false): number[] {
+        public static CalculateSpring(n1: Node, n2: Node, repelOnly = false): number[] {
             let dx = n1.getPos().x - n2.getPos().x;
             let dy = n1.getPos().y - n2.getPos().y;
             let d = Math.sqrt(dx**2 + dy**2);
