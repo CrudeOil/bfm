@@ -44,7 +44,7 @@ namespace Flow {
             canvas.onmousedown = (e: MouseEvent) => {
                 let x = e.clientX - canvasRect.left;
                 let y = e.clientY - canvasRect.top;
-                let clickedNode = Node.GetNodeAt(x, y, this.nodes, this.dragOffset, this.zoomScale);
+                let clickedNode = this.getNodeAt(x, y);
                 if (clickedNode) {
                     this.nodeDragStart = {x: e.x, y: e.y}
                 }else{
@@ -68,7 +68,7 @@ namespace Flow {
             canvas.onmouseup = (e: MouseEvent) => {
                 let x = e.clientX - canvasRect.left;
                 let y = e.clientY - canvasRect.top;
-                let clickedNode = Node.GetNodeAt(x, y, this.nodes, this.dragOffset, this.zoomScale);
+                let clickedNode = this.getNodeAt(x, y);
                 this.canvasDrag = false;
                 for (var i = 0; i < this.selectedNodes.length; i++) {
                     this.selectedNodes[i].setState(NodeState.selected);
@@ -128,7 +128,7 @@ namespace Flow {
                 }else{
                     let x = e.clientX - canvasRect.left;
                     let y = e.clientY - canvasRect.top;
-                    let clickedNode = Node.GetNodeAt(x, y, this.nodes, this.dragOffset, this.zoomScale);
+                    let clickedNode = this.getNodeAt(x, y);
 
                     // only do this stuff while left mouse button is held down
                     // also only do this when we moved a certain amount TODO: make this work, I don't think this works
@@ -202,6 +202,30 @@ namespace Flow {
             }
         }
 
+        public translateToCanvas(p: IPoint): IPoint {
+            return {
+                x: p.x * this.zoomScale + this.dragOffset.x,
+                y: p.y * this.zoomScale + this.dragOffset.y
+            }
+        }
+
+        public getNodeAt(x: number, y: number): Node {
+            let x1, x2, y1, y2: number;
+            let canvasPoint: IPoint;
+
+            for (var i = 0; i < this.nodes.length; i++) {
+                canvasPoint = this.translateToCanvas(this.nodes[i].getPos());
+                x1 = canvasPoint.x - Node.Width / 2 * this.zoomScale;
+                x2 = x1 + Node.Width*this.zoomScale;
+                y1 = canvasPoint.y - Node.Height / 2 * this.zoomScale;
+                y2 = y1 + Node.Height*this.zoomScale;
+                if (x > x1 && x < x2 && y > y1 && y < y2) {
+                    return this.nodes[i];
+                }
+            }
+            return undefined;
+        }
+
         private beforeDraw = () => {
             var springForces: number[];
             for (var i = 0; i < this.edges.length; i++) {
@@ -233,31 +257,35 @@ namespace Flow {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
             for (var i = 0; i < this.edges.length; i++ ) {
+                let firstNodePos = this.edges[i].getNodes()[0].getPos();
+                let secondNodePos = this.edges[i].getNodes()[1].getPos();
+
                 this.ctx.strokeStyle = this.edges[i].color;
                 this.ctx.beginPath();
                 this.ctx.moveTo(
-                    this.edges[i].getNodes()[0].getPosX() * this.zoomScale + this.dragOffset.x,
-                    this.edges[i].getNodes()[0].getPosY() * this.zoomScale + this.dragOffset.y
+                    this.translateToCanvas(firstNodePos).x,
+                    this.translateToCanvas(firstNodePos).y
                 );
                 this.ctx.lineTo(
-                    this.edges[i].getNodes()[1].getPosX() * this.zoomScale + this.dragOffset.x,
-                    this.edges[i].getNodes()[1].getPosY() * this.zoomScale + this.dragOffset.y
+                    this.translateToCanvas(secondNodePos).x,
+                    this.translateToCanvas(secondNodePos).y
                 );
                 this.ctx.stroke();
             }
 
             for (var i = 0; i < this.nodes.length; i++) {
+                let nodePos = this.translateToCanvas(this.nodes[i].getPos());
                 this.ctx.fillStyle = this.nodes[i].getColor();
                 this.ctx.fillRect(
-                    this.nodes[i].getPosX() * this.zoomScale + this.dragOffset.x - Node.Width / 2 * this.zoomScale,
-                    this.nodes[i].getPosY() * this.zoomScale + this.dragOffset.y - Node.Height / 2 * this.zoomScale,
+                    nodePos.x - Node.Width / 2 * this.zoomScale,
+                    nodePos.y - Node.Height / 2 * this.zoomScale,
                     Node.Width * this.zoomScale,
                     Node.Height * this.zoomScale
                 );
                 this.ctx.strokeText(
                     this.nodes[i].name,
-                    this.nodes[i].getPosX() * this.zoomScale + this.dragOffset.x - Node.Height / 2 * this.zoomScale + 10,
-                    this.nodes[i].getPosY() * this.zoomScale + this.dragOffset.y
+                    nodePos.x - Node.Height / 2 * this.zoomScale + 10,
+                    nodePos.y
                 );
             }
             this.ctx.strokeText(`x: ${this.dragOffset.y - this.canvas.clientHeight/2}`, 100, 10);

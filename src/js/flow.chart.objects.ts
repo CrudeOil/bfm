@@ -1,3 +1,6 @@
+/// <reference path="flow.util.ts" />
+
+
 namespace Flow {
     export class Edge {
         public static SpringFriction = 1;
@@ -19,8 +22,8 @@ namespace Flow {
         }
 
         public static CalculateSpring(n1: Node, n2: Node, zoomScale = 1, repelOnly = false): number[] {
-            let dx = n1.getPosX() - n2.getPosX();
-            let dy = n1.getPosY() - n2.getPosY();
+            let dx = n1.getPos().x - n2.getPos().x;
+            let dy = n1.getPos().y - n2.getPos().y;
             let d = Math.sqrt(dx**2 + dy**2);
 
             if (d === 0) {
@@ -65,26 +68,18 @@ namespace Flow {
 
         name: string;
         type: NodeType;
-        pos: number[];
+        pos: IPoint;
         state: NodeState;
 
         public constructor(name: string, type: NodeType) {
             this.name = name;
             this.type = type;
-            this.pos = [0,0,0];
+            this.pos = {x:0,y:0};
             this.state = NodeState.active;
         }
 
-        public getPosX(): number {
-            return this.pos[0];
-        }
-
-        public getPosY(): number {
-            return this.pos[1];
-        }
-
-        public getZ(): number {
-            return this.pos[2];
+        public getPos(): IPoint {
+            return this.pos;
         }
 
         public setState(state: NodeState) {
@@ -110,36 +105,16 @@ namespace Flow {
             }
         }
 
-        public setPos(x: number, y: number, z?: number): void {
-            this.pos[0] = x;
-            this.pos[1] = y;
-            this.pos[2] = z? z : this.pos[2];
+        public setPos(x: number, y: number): void {
+            this.pos.x = x;
+            this.pos.y = y;
         }
 
         public move(dx: number, dy: number, ignoreState = false): void {
             if (ignoreState || (this.state !== NodeState.dragging)) {
-                this.pos[0] += dx;
-                this.pos[1] += dy;
+                this.pos.x += dx;
+                this.pos.y += dy;
             }
-        }
-
-        public static GetNodeAt(x: number, y: number, nodes: Node[], dragOffset: {x:number, y:number}, zoomScale: number): Node {
-            let x1, x2, y1, y2: number;
-
-            for (var i = 0; i < nodes.length; i++) {
-                x1 = nodes[i].getPosX() * zoomScale + dragOffset.x - Node.Width / 2 * zoomScale;
-                x2 = x1 + Node.Width*zoomScale;
-                y1 = nodes[i].getPosY() * zoomScale + dragOffset.y - Node.Height / 2 * zoomScale;
-                y2 = y1 + Node.Height*zoomScale;
-                if (x > x1 && x < x2 && y > y1 && y < y2) {
-                    return nodes[i];
-                }
-            }
-            return undefined;
-        }
-
-        public toString() {
-            return `name: ${this.name}, x: ${this.getPosX()}, y: ${this.getPosY()}`;
         }
     }
 }
