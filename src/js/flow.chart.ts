@@ -220,7 +220,8 @@ namespace Flow {
                 );
             }
             this.ctx.strokeText("Press 'a' to add node", 100, 50);
-            this.ctx.strokeText("Press 'c' to connect nodes", 100, 80);
+            this.ctx.strokeText("Press 'b' to add node and connect to last", 100, 70);
+            this.ctx.strokeText("Press 'c' to connect nodes", 100, 90);
 
             this.afterDraw();
         }
