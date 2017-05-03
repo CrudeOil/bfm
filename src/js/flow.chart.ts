@@ -35,7 +35,7 @@ namespace Flow {
                 dy = 0;
             }
 
-            d = Math.abs(d/zoomScale);
+            d = Math.abs(d);
 
             let f = 0;
             let fx = 0;
@@ -127,9 +127,9 @@ namespace Flow {
             let x1, x2, y1, y2: number;
 
             for (var i = 0; i < nodes.length; i++) {
-                x1 = nodes[i].getPosX() + dragOffset.x - Node.Width / 2 * zoomScale;
+                x1 = nodes[i].getPosX() * zoomScale + dragOffset.x - Node.Width / 2 * zoomScale;
                 x2 = x1 + Node.Width*zoomScale;
-                y1 = nodes[i].getPosY() + dragOffset.y - Node.Height / 2 * zoomScale;
+                y1 = nodes[i].getPosY() * zoomScale + dragOffset.y - Node.Height / 2 * zoomScale;
                 y2 = y1 + Node.Height*zoomScale;
                 if (x > x1 && x < x2 && y > y1 && y < y2) {
                     return nodes[i];
@@ -139,7 +139,7 @@ namespace Flow {
         }
 
         public toString() {
-            return `x: ${this.getPosX()} y: ${this.getPosY()}`;
+            return `name: ${this.name}, x: ${this.getPosX()}, y: ${this.getPosY()}`;
         }
     }
 
@@ -231,7 +231,7 @@ namespace Flow {
                 }
                 if (this.nodeDrag) {
                     for (var i = 0; i < this.selectedNodes.length; i++) {
-                        this.selectedNodes[i].move(e.movementX, e.movementY, true);
+                        this.selectedNodes[i].move(e.movementX / this.zoomScale, e.movementY / this.zoomScale, true);
                     }
                 }else{
                     let canvasRect = this.canvas.getBoundingClientRect();
@@ -259,7 +259,11 @@ namespace Flow {
                 }
             };
             canvas.onmousewheel = (e: WheelEvent) => {
-                this.zoomScale = e.wheelDelta === 120 ? this.zoomScale *= 2 : this.zoomScale /= 2;
+                if (e.wheelDelta === 120) {
+                    this.zoomScale *= 2;
+                }else{
+                    this.zoomScale /= 2
+                }
             };
 
             this.ctx = canvas.getContext("2d");
@@ -332,12 +336,12 @@ namespace Flow {
                 this.ctx.strokeStyle = this.edges[i].color;
                 this.ctx.beginPath();
                 this.ctx.moveTo(
-                    this.edges[i].getNodes()[0].getPosX() + this.dragOffset.x,
-                    this.edges[i].getNodes()[0].getPosY() + this.dragOffset.y
+                    this.edges[i].getNodes()[0].getPosX() * this.zoomScale + this.dragOffset.x,
+                    this.edges[i].getNodes()[0].getPosY() * this.zoomScale + this.dragOffset.y
                 );
                 this.ctx.lineTo(
-                    this.edges[i].getNodes()[1].getPosX() + this.dragOffset.x,
-                    this.edges[i].getNodes()[1].getPosY() + this.dragOffset.y
+                    this.edges[i].getNodes()[1].getPosX() * this.zoomScale + this.dragOffset.x,
+                    this.edges[i].getNodes()[1].getPosY() * this.zoomScale + this.dragOffset.y
                 );
                 this.ctx.stroke();
             }
@@ -345,15 +349,15 @@ namespace Flow {
             for (var i = 0; i < this.nodes.length; i++) {
                 this.ctx.fillStyle = this.nodes[i].getColor();
                 this.ctx.fillRect(
-                    this.nodes[i].getPosX() + this.dragOffset.x - Node.Width / 2 * this.zoomScale,
-                    this.nodes[i].getPosY() + this.dragOffset.y - Node.Height / 2 * this.zoomScale,
+                    this.nodes[i].getPosX() * this.zoomScale + this.dragOffset.x - Node.Width / 2 * this.zoomScale,
+                    this.nodes[i].getPosY() * this.zoomScale + this.dragOffset.y - Node.Height / 2 * this.zoomScale,
                     Node.Width * this.zoomScale,
                     Node.Height * this.zoomScale
                 );
                 this.ctx.strokeText(
                     this.nodes[i].name,
-                    this.nodes[i].getPosX() + this.dragOffset.x - Node.Height / 2 * this.zoomScale + 10,
-                    this.nodes[i].getPosY() + this.dragOffset.y
+                    this.nodes[i].getPosX() * this.zoomScale + this.dragOffset.x - Node.Height / 2 * this.zoomScale + 10,
+                    this.nodes[i].getPosY() * this.zoomScale + this.dragOffset.y
                 );
             }
             this.ctx.strokeText("Press 'a' to add node", 100, 50);
