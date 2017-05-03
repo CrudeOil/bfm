@@ -2,6 +2,11 @@
 
 
 namespace Flow {
+    export interface Objects {
+        nodes: Node[],
+        edges: Edge[]
+    }
+
     export class Edge {
         public static SpringFriction = 1;
         public static SpringStrength = 0.5;
@@ -19,33 +24,6 @@ namespace Flow {
 
         public getNodes(): Node[] {
             return [this.nodes[0], this.nodes[1]];
-        }
-
-        public static CalculateSpring(n1: Node, n2: Node, repelOnly = false): number[] {
-            let dx = n1.getPos().x - n2.getPos().x;
-            let dy = n1.getPos().y - n2.getPos().y;
-            let d = Math.sqrt(dx**2 + dy**2);
-
-            if (d === 0) {
-                d = 1;
-                dx = 1;
-                dy = 0;
-            }
-
-            d = Math.abs(d);
-
-            let f = 0;
-            let fx = 0;
-            let fy = 0;
-
-            if (d > 10 && !(repelOnly && Edge.SpringLength - d < 0)) {
-                f = (Edge.SpringLength - d) * Edge.SpringStrength;
-                fx = ((dx / d) * f) / 2;
-                fy = ((dy / d) * f) / 2;
-            }
-
-
-            return [f, fx, fy];
         }
     }
 
@@ -114,6 +92,15 @@ namespace Flow {
             if (ignoreState || (this.state !== NodeState.dragging)) {
                 this.pos.x += dx;
                 this.pos.y += dy;
+            }
+        }
+
+        public static getRect(p: Flow.IPoint, scale: number): Flow.IRect {
+            return {
+                x1: p.x - Node.Width * scale,
+                y1: p.y - Node.Width * scale,
+                x2: p.x + Node.Width * scale,
+                y2: p.x + Node.Width * scale
             }
         }
     }
