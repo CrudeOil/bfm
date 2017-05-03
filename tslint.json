@@ -4,6 +4,12 @@
         "align": [
             true
         ],
+        // we're using typescript here
+        "array-type": [
+            "array",
+            "array-simple",
+            "generic"
+        ],
         // data => {}; vs (data) => {};
         // this one is just preference. i welcome any objective arguments to omit the parens
         "arrow-parens": true,
@@ -13,14 +19,26 @@
         "comment-format": [
             false
         ],
-        // increases readability
+        "completed-docs": [
+            "classes",
+            "functions",
+            "methods"
+        ],
+        // totally increases readability
         "curly": true,
         // gets rid of the passive-aggressive icon at the bottom of files on github
         "eofline": true,
+        // go forth and argue
+        "indent": [
+            "spaces"
+        ],
         // hopefully increases readability
         "interface-name": [
             "always-prefix"
         ],
+        // consistency
+        "jsdoc-format": true,
+        "label-position": true,
         // come on son
         "linebreak-style": [
             "LF"
@@ -31,11 +49,11 @@
         ],
         // i don't like change
         "new-parens": true,
-        // you're in bigger trouble when you need eval
+        // you're in bigger trouble than this linter when you need eval
         "no-eval": true,
         // use undefined instead
         "no-null-keyword": true,
-        // json does not allow this, and neither will anything else
+        // json does not allow this, and neither should anything else
         "trailing-comma": [
             false
         ],
@@ -43,9 +61,14 @@
         "triple-equals": [
             true
         ],
+        // i much prefer the distance between variable name and type
+        "typedef-whitespace": [
+            true
+        ],
         // consistency
         "variable-name": [
-            true
+            true,
+            "allow-leading-underscore"
         ]
     }
 }
