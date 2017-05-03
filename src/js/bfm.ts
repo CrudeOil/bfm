@@ -1,4 +1,4 @@
-/// <reference path="/typings/index.d.ts" />
+/// <reference path="../../typings/index.d.ts" />
 /// <reference path="flow.chart.ts" />
 
 let flowChart: Flow.Chart;
@@ -20,7 +20,7 @@ $().ready(() => {
         if (e.keyCode === 67) {
             flowChart.connectSelected();
         }else{
-            $.get("http://setgetgo.com/randomword/get.php", (word) => {
+            $.get("http://setgetgo.com/randomword/get.php", (word: string) => {
                 // a
                 if (e.keyCode === 65) {
                     let newNode: Flow.Node = flowChart.addNode(
