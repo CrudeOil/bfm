@@ -3,6 +3,10 @@
 
 namespace Flow {
     export class Chart {
+        // furthest allowed to be zoomed in
+        public static MaxZoomLevel = 2;
+        // furthest allowed to be zoomed out
+        public static MinZoomLevel = 4;
 
         private canvasParent: HTMLDivElement;
         private canvas: HTMLCanvasElement;
@@ -26,10 +30,18 @@ namespace Flow {
         public constructor(canvasParent: HTMLDivElement, canvas: HTMLCanvasElement) {
             this.canvasParent = canvasParent;
             this.canvas = canvas;
+
+            // needed for some conversion to actual canvas location in mouse events
+            let canvasRect = this.canvas.getBoundingClientRect();
+
+            // set dimensions. TODO: update these when window is resized
             canvas.height = canvasParent.clientHeight;
             canvas.width = canvasParent.clientWidth;
+
+            // stuff we want to happen on mousedown:
+            // * start dragging canvas if not on node
+            // * start dragging node(s) if on node
             canvas.onmousedown = (e: MouseEvent) => {
-                let canvasRect = this.canvas.getBoundingClientRect();
                 let x = e.clientX - canvasRect.left;
                 let y = e.clientY - canvasRect.top;
                 let clickedNode = Node.GetNodeAt(x, y, this.nodes, this.dragOffset, this.zoomScale);
@@ -40,8 +52,20 @@ namespace Flow {
                     this.canvasDragStart = {x: e.x, y: e.y}
                 }
             };
+            // stuff we want to happen on mouse up:
+            // * stop dragging canvas if we were dragging canvas
+            // * stop dragging nodes if we were dragging nodes
+            // * if neither, select:
+            //   * a node if clicked on node and shift not pressed
+            //   * add a node to selection if clicked on node and shift pressed
+            //   * set state of selected nodes to selected
+            // * or deselect:
+            //   * all nodes if not clicked on node
+            //   * all other nodes if clicked on node and shift was not pressed
+            //   * set state of deselected nodes to active
+            // TODO: clean up, works but is probably messy
+            // TODO: comment anything that isn't self-explanatory
             canvas.onmouseup = (e: MouseEvent) => {
-                let canvasRect = this.canvas.getBoundingClientRect();
                 let x = e.clientX - canvasRect.left;
                 let y = e.clientY - canvasRect.top;
                 let clickedNode = Node.GetNodeAt(x, y, this.nodes, this.dragOffset, this.zoomScale);
@@ -76,6 +100,9 @@ namespace Flow {
                     }
                 }
             };
+
+            // stuff we want to happen when mouse leaves the screen:
+            // * stop dragging everything
             canvas.onmouseleave = () => {
                 this.canvasDrag = false;
                 this.nodeDrag = false;
@@ -83,6 +110,10 @@ namespace Flow {
                     this.selectedNodes[i].setState(NodeState.selected);
                 }
             };
+            // stuff we want to happen when mouse moves:
+            // * if dragging canvas, adjust the drag offset
+            // * if dragging nodes, move the nodes
+            // TODO: Multi-select?
             canvas.onmousemove = (e: MouseEvent) => {
                 if (this.canvasDrag) {
                     this.dragOffset.x += e.movementX;
@@ -90,14 +121,18 @@ namespace Flow {
                 }
                 if (this.nodeDrag) {
                     for (var i = 0; i < this.selectedNodes.length; i++) {
+                        // moving the actual nodes. speed is adjusted by zoomscale
+                        // should always be true to mouse movement
                         this.selectedNodes[i].move(e.movementX / this.zoomScale, e.movementY / this.zoomScale, true);
                     }
                 }else{
-                    let canvasRect = this.canvas.getBoundingClientRect();
                     let x = e.clientX - canvasRect.left;
                     let y = e.clientY - canvasRect.top;
                     let clickedNode = Node.GetNodeAt(x, y, this.nodes, this.dragOffset, this.zoomScale);
 
+                    // only do this stuff while left mouse button is held down
+                    // also only do this when we moved a certain amount TODO: make this work, I don't think this works
+                    // TODO: change to right mouse button along with multi-select?
                     if (clickedNode && e.buttons === 1 && (e.x - this.nodeDragStart.x < 5 || e.y - this.nodeDragStart.y)) {
                         this.nodeDrag = true;
 
@@ -117,11 +152,17 @@ namespace Flow {
                     }
                 }
             };
+
+            // do the zooming business
             canvas.onmousewheel = (e: WheelEvent) => {
-                if (e.wheelDelta === 120) {
-                    this.zoomScale *= 2;
-                }else{
-                    this.zoomScale /= 2
+                if (e.wheelDelta === 120) { // mwheelup
+                    if (this.zoomScale < 2**Chart.MaxZoomLevel) {
+                        this.zoomScale *= 2;
+                    }
+                }else{ // mwheeldown
+                    if (this.zoomScale > 2**-Chart.MinZoomLevel) {
+                        this.zoomScale /= 2
+                    }
                 }
             };
 
@@ -219,9 +260,12 @@ namespace Flow {
                     this.nodes[i].getPosY() * this.zoomScale + this.dragOffset.y
                 );
             }
-            this.ctx.strokeText("Press 'a' to add node", 100, 50);
-            this.ctx.strokeText("Press 'b' to add node and connect to last", 100, 70);
-            this.ctx.strokeText("Press 'c' to connect nodes", 100, 90);
+            this.ctx.strokeText(`x: ${this.dragOffset.y - this.canvas.clientHeight/2}`, 100, 10);
+            this.ctx.strokeText(`y: ${this.dragOffset.x - this.canvas.clientWidth/2}`, 100, 30);
+            this.ctx.strokeText(`zoom: ${this.zoomScale}x`, 100, 50);
+            this.ctx.strokeText("Press 'a' to add node", 100, 70);
+            this.ctx.strokeText("Press 'b' to add node and connect to last", 100, 90);
+            this.ctx.strokeText("Press 'c' to connect nodes", 100, 110);
 
             this.afterDraw();
         }
