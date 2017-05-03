@@ -1,13 +1,13 @@
 /// <reference path="/typings/index.d.ts" />
 /// <reference path="flow.chart.ts" />
 
-
+let flowChart: Flow.Chart;
 
 $().ready(() => {
     let canvasDiv: HTMLDivElement = <HTMLDivElement>document.getElementById("mainflowdiv");
     let canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("mainflow");
 
-    let flowChart: Flow.Chart = new Flow.Chart(canvasDiv, canvas);
+    flowChart = new Flow.Chart(canvasDiv, canvas);
 
     let n1: Flow.Node = flowChart.addNode("FASTQ", Flow.NodeType.data, 10, 0);
     let n2: Flow.Node = flowChart.addNode("FASTA", Flow.NodeType.data, -10, 0);
