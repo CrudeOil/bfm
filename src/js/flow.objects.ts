@@ -33,7 +33,8 @@ namespace Flow {
         active,
         disabled,
         dragging,
-        selected
+        selected,
+        viewing
     }
 
     export class Node {
@@ -43,13 +44,15 @@ namespace Flow {
         name: string;
         type: NodeType;
         pos: IPoint;
+        color: string|CanvasGradient|CanvasPattern;
         state: NodeState;
 
-        public constructor(name: string, type: NodeType) {
+        public constructor(name: string, type: NodeType, color = "#0000FF") {
             this.name = name;
             this.type = type;
             this.pos = {x:0,y:0};
             this.state = NodeState.active;
+            this.color = color;
         }
 
         public getPos(): IPoint {
@@ -67,13 +70,15 @@ namespace Flow {
         public getColor(): string|CanvasGradient|CanvasPattern {
             switch(this.state) {
                 case NodeState.active:
-                    return "#0000FF";
+                    return this.color;
                 case NodeState.disabled:
                     return "#A5A5A5";
                 case NodeState.dragging:
                     return "#0000A5";
                 case NodeState.selected:
                     return "#A5A5FF";
+                case NodeState.viewing:
+                    return this.color;
                 default:
                     return "#FF0000";
             }

@@ -10,6 +10,8 @@ namespace Flow {
         private viewOffset: {x:number,y:number};
         private viewScale: number;
 
+        private debugTexts: string[] = [];
+
         public constructor(canvas: HTMLCanvasElement) {
             this.canvas = canvas;
             
@@ -32,14 +34,22 @@ namespace Flow {
             for (var i = 0; i < objects.nodes.length; i++) {
                 this.drawNode(objects.nodes[i]);
             }
-            this.ctx.strokeText(`x: ${this.viewOffset.x - this.canvas.clientWidth/2}`, 100, 10);
-            this.ctx.strokeText(`y: ${this.viewOffset.y - this.canvas.clientHeight/2}`, 100, 30);
-            this.ctx.strokeText(`offsx: ${this.viewOffset.x}`, 100, 50);
-            this.ctx.strokeText(`offsy: ${this.viewOffset.y}`, 100, 70);
-            this.ctx.strokeText(`zoom: ${this.viewScale}x`, 100, 90);
-            this.ctx.strokeText("Press 'a' to add node", 100, 110);
-            this.ctx.strokeText("Press 'b' to add node and connect to last", 100, 130);
-            this.ctx.strokeText("Press 'c' to connect nodes", 100, 150);
+            this.drawDebugText('x', `${this.viewOffset.x - this.canvas.clientWidth/2}`);
+            this.drawDebugText('y', `${this.viewOffset.y - this.canvas.clientHeight/2}`);
+            this.drawDebugText('offsx', `${this.viewOffset.x}`);
+            this.drawDebugText('offsy', `${this.viewOffset.y}`);
+            this.drawDebugText('zoom', `${this.viewScale}x`);
+            this.drawDebugText('a', 'add node');
+            this.drawDebugText('b', 'add node and connect to last');
+            this.drawDebugText('c', 'connect nodes');
+        }
+
+        public drawDebugText(name: string, text: string) {
+            var i = this.debugTexts.indexOf(name);
+            if (i === -1) {
+                this.debugTexts.push(name);
+            }
+            this.ctx.strokeText(`${name}: ${text}`, 100, 10 + i * 20);
         }
 
         private drawNode(node: Flow.Node) {
@@ -97,6 +107,19 @@ namespace Flow {
 
         public getViewOffset(): IPoint {
             return this.viewOffset;
+        }
+
+        // from http://stackoverflow.com/questions/11023144/working-with-hex-strings-and-hex-values-more-easily-in-javascript
+        public static addHexColor(c1: string, c2: string) {
+            if (c1.charAt(0) === "#") {
+                c1 = c1.substr(1);
+            }
+            if (c2.charAt(0) === "#") {
+                c2 = c2.substr(1);
+            }
+            var hexStr = (parseInt(c1, 16) + parseInt(c2, 16)).toString(16);
+            while (hexStr.length < 6) { hexStr = '0' + hexStr; } // Zero pad.
+            return `#${hexStr}`;
         }
     }
 }
