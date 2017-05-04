@@ -26,36 +26,11 @@ namespace Flow {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
             for (var i = 0; i < objects.edges.length; i++ ) {
-                let firstNodePos = objects.edges[i].getNodes()[0].getPos();
-                let secondNodePos = objects.edges[i].getNodes()[1].getPos();
-
-                this.ctx.strokeStyle = objects.edges[i].color;
-                this.ctx.beginPath();
-                this.ctx.moveTo(
-                    this.translateToCanvas(firstNodePos).x,
-                    this.translateToCanvas(firstNodePos).y
-                );
-                this.ctx.lineTo(
-                    this.translateToCanvas(secondNodePos).x,
-                    this.translateToCanvas(secondNodePos).y
-                );
-                this.ctx.stroke();
+                this.drawEdge(objects.edges[i]);
             }
 
             for (var i = 0; i < objects.nodes.length; i++) {
-                let nodePos = this.translateToCanvas(objects.nodes[i].getPos());
-                this.ctx.fillStyle = objects.nodes[i].getColor();
-                this.ctx.fillRect(
-                    nodePos.x - Node.Width / 2 * this.viewScale,
-                    nodePos.y - Node.Height / 2 * this.viewScale,
-                    Node.Width * this.viewScale,
-                    Node.Height * this.viewScale
-                );
-                this.ctx.strokeText(
-                    objects.nodes[i].name,
-                    nodePos.x - Node.Height / 2 * this.viewScale + 10,
-                    nodePos.y
-                );
+                this.drawNode(objects.nodes[i]);
             }
             this.ctx.strokeText(`x: ${this.viewOffset.x - this.canvas.clientWidth/2}`, 100, 10);
             this.ctx.strokeText(`y: ${this.viewOffset.y - this.canvas.clientHeight/2}`, 100, 30);
@@ -65,6 +40,39 @@ namespace Flow {
             this.ctx.strokeText("Press 'a' to add node", 100, 110);
             this.ctx.strokeText("Press 'b' to add node and connect to last", 100, 130);
             this.ctx.strokeText("Press 'c' to connect nodes", 100, 150);
+        }
+
+        private drawNode(node: Flow.Node) {
+            let canvasPos = this.translateToCanvas(node.getPos());
+            this.ctx.fillStyle = node.getColor();
+            this.ctx.fillRect(
+                canvasPos.x - Node.Width / 2 * this.viewScale,
+                canvasPos.y - Node.Height / 2 * this.viewScale,
+                Node.Width * this.viewScale,
+                Node.Height * this.viewScale
+            );
+            this.ctx.strokeText(
+                node.name,
+                canvasPos.x - Node.Height / 2 * this.viewScale + 10 * this.viewScale,
+                canvasPos.y
+            );
+        }
+
+        private drawEdge(edge: Flow.Edge) {
+            let firstNodePos = edge.getNodes()[0].getPos();
+            let secondNodePos = edge.getNodes()[1].getPos();
+
+            this.ctx.strokeStyle = edge.color;
+            this.ctx.beginPath();
+            this.ctx.moveTo(
+                this.translateToCanvas(firstNodePos).x,
+                this.translateToCanvas(firstNodePos).y
+            );
+            this.ctx.lineTo(
+                this.translateToCanvas(secondNodePos).x,
+                this.translateToCanvas(secondNodePos).y
+            );
+            this.ctx.stroke();
         }
 
         public translateToCanvas(p: IPoint): IPoint {
