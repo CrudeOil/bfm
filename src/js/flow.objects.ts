@@ -8,10 +8,6 @@ namespace Flow {
     }
 
     export class Edge {
-        public static SpringFriction = 1;
-        public static SpringStrength = 0.5;
-        public static SpringLength = 250;
-
         nodes: Node[];
         color: string|CanvasGradient|CanvasPattern;
 

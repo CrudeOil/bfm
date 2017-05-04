@@ -1,8 +1,8 @@
 namespace Flow {
     export class PhysicsHandler {
-        public constructor() {
-
-        }
+        public static SpringFriction = 1;
+        public static SpringStrength = 0.5;
+        public static SpringLength = 250;
 
         public static CalculateSpring(n1: Node, n2: Node, repelOnly = false): number[] {
             let dx = n1.getPos().x - n2.getPos().x;
@@ -21,8 +21,8 @@ namespace Flow {
             let fx = 0;
             let fy = 0;
 
-            if (d > 10 && !(repelOnly && Edge.SpringLength - d < 0)) {
-                f = (Edge.SpringLength - d) * Edge.SpringStrength;
+            if (d > 10 && !(repelOnly && PhysicsHandler.SpringLength - d < 0)) {
+                f = (PhysicsHandler.SpringLength - d) * PhysicsHandler.SpringStrength;
                 fx = ((dx / d) * f) / 2;
                 fy = ((dy / d) * f) / 2;
             }
