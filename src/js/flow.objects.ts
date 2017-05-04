@@ -98,11 +98,7 @@ namespace Flow {
         public static getRect(p: Flow.IPoint, scale: number): Flow.IRect {
             return {
                 x1: p.x - Node.Width / 2 * scale,
-<<<<<<< HEAD
                 y1: p.y - Node.Height / 2 * scale,
-=======
-                y1: p.y - Node.Width / 2 * scale,
->>>>>>> f1928a1c2cf943f5e848c1c429a551493aa88a02
                 x2: p.x + Node.Width / 2 * scale,
                 y2: p.y + Node.Height / 2 * scale
             }
