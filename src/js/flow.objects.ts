@@ -97,10 +97,10 @@ namespace Flow {
 
         public static getRect(p: Flow.IPoint, scale: number): Flow.IRect {
             return {
-                x1: p.x - Node.Width * scale,
-                y1: p.y - Node.Width * scale,
-                x2: p.x + Node.Width * scale,
-                y2: p.x + Node.Width * scale
+                x1: p.x - Node.Width / 2 * scale,
+                y1: p.y - Node.Width / 2 * scale,
+                x2: p.x + Node.Width / 2 * scale,
+                y2: p.y + Node.Height / 2 * scale
             }
         }
     }
