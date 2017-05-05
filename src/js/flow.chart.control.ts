@@ -18,7 +18,9 @@ namespace Flow {
         // movement of canvas and nodes
         private canvasDragStart: {x:number, y:number};
         private nodeDragStart: {x:number, y:number};
-        private selectedNodes: Node[] = []
+        private selectedNodes: Flow.Node[] = []
+        private viewingNode: Flow.Node;
+        private viewingEdge: Flow.Edge;
         
         private state: Flow.ControlState;
 
@@ -88,6 +90,7 @@ namespace Flow {
                                 this.selectedNodes = [clickedNode];
                                 if (this.lastClick && Date.now() - this.lastClick < 500) {
                                     clickedNode.setState(NodeState.viewing);
+                                    this.viewingNode = clickedNode;
                                     this.state = Flow.ControlState.viewingNode;
                                     this.lastClick = undefined;
                                 }else{
@@ -219,10 +222,30 @@ namespace Flow {
                     }
                 }
             };
+
+            document.addEventListener('keyup', (e: KeyboardEvent) => {
+                console.log(this.state);
+                if (e.keyCode === 27 && this.getState() === Flow.ControlState.viewingNode) {
+                    this.viewingNode.setState(Flow.NodeState.active);
+                    this.setState(Flow.ControlState.idle);
+                }
+            });
         }
 
         public getSelected() {
             return this.selectedNodes;
+        }
+
+        public getState(): Flow.ControlState {
+            return this.state;
+        }
+
+        public setState(state: Flow.ControlState) {
+            this.state = state;
+        }
+
+        public getViewingNode(): Flow.Node {
+            return this.viewingNode;
         }
     }
 }

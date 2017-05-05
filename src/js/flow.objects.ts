@@ -38,8 +38,10 @@ namespace Flow {
     }
 
     export class Node {
-        public static Width = 100;
-        public static Height = 60;
+        public static GraphWidth = 100;
+        public static GraphHeight = 60;
+        public static ViewWidth = 500;
+        public static ViewHeight = 200;
 
         name: string;
         type: NodeType;
@@ -84,6 +86,21 @@ namespace Flow {
             }
         }
 
+        public getSize(): Flow.IPoint {
+            switch (this.state) {
+                case Flow.NodeState.viewing:
+                    return {
+                        x: Flow.Node.ViewWidth,
+                        y: Flow.Node.ViewHeight
+                    }
+                default:
+                    return {
+                        x: Flow.Node.GraphWidth,
+                        y: Flow.Node.GraphHeight
+                    }
+            }
+        }
+
         public setPos(x: number, y: number): void {
             this.pos.x = x;
             this.pos.y = y;
@@ -98,10 +115,10 @@ namespace Flow {
 
         public static getRect(p: Flow.IPoint, scale: number): Flow.IRect {
             return {
-                x1: p.x - Node.Width / 2 * scale,
-                y1: p.y - Node.Height / 2 * scale,
-                x2: p.x + Node.Width / 2 * scale,
-                y2: p.y + Node.Height / 2 * scale
+                x1: p.x - Node.GraphWidth / 2 * scale,
+                y1: p.y - Node.GraphHeight / 2 * scale,
+                x2: p.x + Node.GraphWidth / 2 * scale,
+                y2: p.y + Node.GraphHeight / 2 * scale
             }
         }
     }

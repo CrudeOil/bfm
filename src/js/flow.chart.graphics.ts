@@ -24,7 +24,7 @@ namespace Flow {
             this.viewScale = 1;
         }
 
-        public draw = (objects: Flow.Objects) => {
+        public drawGraphView = (objects: Flow.Objects) => {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
             for (var i = 0; i < objects.edges.length; i++ ) {
@@ -56,15 +56,38 @@ namespace Flow {
             let canvasPos = this.translateToCanvas(node.getPos());
             this.ctx.fillStyle = node.getColor();
             this.ctx.fillRect(
-                canvasPos.x - Node.Width / 2 * this.viewScale,
-                canvasPos.y - Node.Height / 2 * this.viewScale,
-                Node.Width * this.viewScale,
-                Node.Height * this.viewScale
+                canvasPos.x - node.getSize().x / 2 * this.viewScale,
+                canvasPos.y - node.getSize().y / 2 * this.viewScale,
+                node.getSize().x * this.viewScale,
+                node.getSize().y * this.viewScale
             );
             this.ctx.strokeText(
                 node.name,
-                canvasPos.x - Node.Height / 2 * this.viewScale + 10 * this.viewScale,
+                canvasPos.x - node.getSize().x / 2 * this.viewScale + 10 * this.viewScale,
                 canvasPos.y
+            );
+        }
+
+        drawNodeView(node: Flow.Node) {
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+            let nodeRect: Flow.IRect = {
+                x1: this.canvas.clientWidth / 2 - node.getSize().x / 2,
+                y1: this.canvas.clientHeight / 2 - node.getSize().y / 2,
+                x2: node.getSize().x,
+                y2: node.getSize().y
+            }
+            this.ctx.fillStyle = node.getColor();
+            this.ctx.fillRect(
+                nodeRect.x1,
+                nodeRect.y1,
+                nodeRect.x2,
+                nodeRect.y2
+            )
+            this.ctx.strokeText(
+                node.name,
+                nodeRect.x1 + 10,
+                nodeRect.y1 + 10
             );
         }
 

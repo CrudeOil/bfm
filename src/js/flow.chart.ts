@@ -41,12 +41,19 @@ namespace Flow {
         }
 
         refresh = () => {
-            let objects = {
-                nodes: this.nodes,
-                edges: this.edges
+            switch (this.controlsHandler.getState()) {
+                case Flow.ControlState.viewingNode:
+                    this.graphicsHandler.drawNodeView(this.controlsHandler.getViewingNode());
+                    break;
+                default:
+                    let objects = {
+                        nodes: this.nodes,
+                        edges: this.edges
+                    }
+                    this.physicsHandler.beforeDraw(objects);
+                    this.graphicsHandler.drawGraphView(objects);
+                    break;
             }
-            this.physicsHandler.beforeDraw(objects);
-            this.graphicsHandler.draw(objects);
             window.requestAnimationFrame(this.refresh);
         }
 
