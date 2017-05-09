@@ -21,7 +21,7 @@ namespace Flow {
             let fx = 0;
             let fy = 0;
 
-            if (d > 10 && !(repelOnly && PhysicsHandler.SpringLength - d < 0)) {
+            if (!(repelOnly && PhysicsHandler.SpringLength - d < 0)) {
                 f = (PhysicsHandler.SpringLength - d) * PhysicsHandler.SpringStrength;
                 fx = ((dx / d) * f) / 2;
                 fy = ((dy / d) * f) / 2;
