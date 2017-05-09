@@ -1,0 +1,23 @@
+{
+    "name": "Bioinformatics data types and applications",
+    "nodes": {
+        "FASTA": {
+            "content": "FASTA files contain sequences of nucleotides or amino acids"
+        },
+        "FASTQ": {
+            "content": "FASTQ files contain sequences of nubleotides, but with added quality score from NGS sequencing",
+            "pos": {
+                "x": 0,
+                "y": 0
+            }
+        }
+    },
+    "edges": [
+        {
+            "name": "Scripts",
+            "content": "FASTQ can be converted into FASTA by removing the quality header and quality score on every 3rd and 4th line.",
+            "fromNode": "FASTQ",
+            "toNode": "FASTA"
+        }
+    ]
+}

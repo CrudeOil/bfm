@@ -14,4 +14,23 @@ namespace Flow {
             return Math.sqrt((p2.x - p1.x)**2 + (p2.y - p1.y)**2);
         }
     }
+
+    export interface INodeJson {
+        content: string,
+        type: Flow.NodeType,
+        pos?: Flow.IPoint
+    }
+
+    export interface IEdgeJson {
+        name: string,
+        content: string,
+        fromNode: string,
+        toNode: string
+    }
+
+    export interface IChartJson {
+        name: string,
+        nodes: {[name: string]: INodeJson},
+        edges: IEdgeJson[]
+    }
 }

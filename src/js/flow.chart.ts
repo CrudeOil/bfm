@@ -17,25 +17,28 @@ namespace Flow {
         private canvas: HTMLCanvasElement;
 
         // collections of edges and nodes
+        // TODO: merge into one dict
         private nodes: Flow.Node[];
+        public nodeDict: {[name: string]: Flow.Node};
         private edges: Flow.Edge[];
 
         private physicsHandler: Flow.PhysicsHandler;
         private graphicsHandler: Flow.GraphicsHandler;
         private controlsHandler: Flow.ControlHandler;
 
-        public constructor(canvasParent: HTMLDivElement, canvas: HTMLCanvasElement) {
-            this.canvasParent = canvasParent;
+        public constructor(canvas: HTMLCanvasElement) {
             this.canvas = canvas;
 
             // needed for some conversion to actual canvas location in mouse events
             let canvasRect = this.canvas.getBoundingClientRect();
 
-            // set dimensions. TODO: update these when window is resized
-            canvas.height = canvasParent.clientHeight;
-            canvas.width = canvasParent.clientWidth;
+            // TODO: update canvas size and width when window is resized
+            this.canvas.width = canvas.parentElement.clientWidth;
+            this.canvas.height = canvas.parentElement.clientHeight;
 
+            // TODO: merge into one dict
             this.nodes = [];
+            this.nodeDict = {};
             this.edges = [];
 
             this.physicsHandler = new PhysicsHandler();
@@ -66,7 +69,13 @@ namespace Flow {
             let newNode: Node = new Node(name, type);
             newNode.setPos(x, y);
             this.nodes.push(newNode);
+            this.nodeDict[newNode.name] = newNode;
             return newNode;
+        }
+
+        public addNodeFromJson(name: string, node: INodeJson) {
+            let nodePos: Flow.IPoint = node.pos ? node.pos : {x:0, y:0}; // default to 0,0 if pos is not set
+            this.addNode(name, node.type, nodePos.x, nodePos.y);
         }
 
         public addEdge(n1: Node, n2: Node): Edge {
@@ -98,6 +107,20 @@ namespace Flow {
                     this.addEdge(selectedNodes[i], selectedNodes[j]);
                 }
             }
+        }
+
+        public static loadChart(canvas: HTMLCanvasElement, chartJson: Flow.IChartJson): Flow.Chart {
+            let newChart: Flow.Chart = new Chart(canvas);
+            let nodeNames: string[] = Object.keys(chartJson.nodes);
+            for (var i = 0; i < nodeNames.length; i++) {
+                newChart.addNodeFromJson(nodeNames[i], chartJson.nodes[nodeNames[i]]);
+            }
+            for (var i = 0; i < chartJson.edges.length; i++) {
+                if (chartJson.edges[i].fromNode in newChart.nodeDict && chartJson.edges[i].toNode in newChart.nodeDict) {
+                    newChart.addEdge(newChart.nodeDict[chartJson.edges[i].fromNode], newChart.nodeDict[chartJson.edges[i].toNode]);
+                }
+            }
+            return newChart;
         }
 
         public getCanvas(): HTMLCanvasElement {
