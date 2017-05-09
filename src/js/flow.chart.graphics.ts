@@ -51,7 +51,8 @@ namespace Flow {
                 this.debugTexts.push(name);
             }
             this.ctx.font = "12px Consolas";
-            this.ctx.strokeText(`${name}: ${text}`, 10, 10 + i * 20);
+            this.ctx.fillStyle = "#FFFFFF";
+            this.ctx.fillText(`${name}: ${text}`, 10, 10 + i * 20);
         }
 
         private drawNode(node: Flow.Node) {
