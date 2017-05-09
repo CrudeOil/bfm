@@ -49,6 +49,7 @@ namespace Flow {
             if (i === -1) {
                 this.debugTexts.push(name);
             }
+            this.ctx.font = "12px Consolas";
             this.ctx.strokeText(`${name}: ${text}`, 100, 10 + i * 20);
         }
 
@@ -61,10 +62,25 @@ namespace Flow {
                 node.getSize().x * this.viewScale,
                 node.getSize().y * this.viewScale
             );
-            this.ctx.strokeText(
+            let textPos: Flow.IPoint = {x:0,y:0}
+            let textSize = 12;
+            if (this.viewScale <= 1 / (Flow.Chart.ScaleMultiplier * Flow.Chart.MinZoomLevel)) { // max zoom out
+                textPos.x = canvasPos.x// - node.getSize().x / 2 * this.viewScale;
+                textPos.y = canvasPos.y - 10;
+            }else{
+                textPos.x = canvasPos.x// - node.getSize().x / 2 * this.viewScale + 10 * this.viewScale,
+                textPos.y = canvasPos.y;
+                if (this.viewScale >= 1) {
+                    textSize += 15 * this.viewScale;
+                }
+            }
+            this.ctx.textAlign = "center";
+            this.ctx.font = `${textSize}px Consolas`;
+            this.ctx.fillStyle = "#FFFFFF"
+            this.ctx.fillText(
                 node.name,
-                canvasPos.x - node.getSize().x / 2 * this.viewScale + 10 * this.viewScale,
-                canvasPos.y
+                textPos.x,
+                textPos.y
             );
         }
 
