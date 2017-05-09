@@ -3,6 +3,11 @@
 
 namespace Flow {
     export class Chart {
+        // view scale ViewMultiplier/
+        // 2 means zoom will be 0.25, 0.5, 1, 2, 4
+        // 3 means zoom will be 0.1, 0.3, 1, 3, 9
+        // etc...
+        public static ScaleMultiplier = 2;
         // furthest allowed to be zoomed in
         public static MaxZoomLevel = 2;
         // furthest allowed to be zoomed out

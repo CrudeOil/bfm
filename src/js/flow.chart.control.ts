@@ -205,7 +205,7 @@ namespace Flow {
                 }
 
                 if (e.wheelDelta === 120) { // mwheelup
-                    if (graphicsHandler.getScale() < 2**Chart.MaxZoomLevel) {
+                    if (graphicsHandler.getScale() < Flow.Chart.ScaleMultiplier ** Flow.Chart.MaxZoomLevel) {
                         graphicsHandler.scale(2);
                         graphicsHandler.moveView({
                             x: dOrigin.x,
@@ -213,7 +213,7 @@ namespace Flow {
                         });
                     }
                 }else{ // mwheeldown
-                    if (graphicsHandler.getScale() > 2**-Chart.MinZoomLevel) {
+                    if (graphicsHandler.getScale() > Flow.Chart.ScaleMultiplier ** -Chart.MinZoomLevel) {
                         graphicsHandler.moveView({
                             x: -dOrigin.x/2,
                             y: -dOrigin.y/2
