@@ -34,6 +34,7 @@ namespace Flow {
             for (var i = 0; i < objects.nodes.length; i++) {
                 this.drawNode(objects.nodes[i]);
             }
+            this.ctx.textAlign = "left";
             this.drawDebugText('x', `${this.viewOffset.x - this.canvas.clientWidth/2}`);
             this.drawDebugText('y', `${this.viewOffset.y - this.canvas.clientHeight/2}`);
             this.drawDebugText('offsx', `${this.viewOffset.x}`);
@@ -50,7 +51,7 @@ namespace Flow {
                 this.debugTexts.push(name);
             }
             this.ctx.font = "12px Consolas";
-            this.ctx.strokeText(`${name}: ${text}`, 100, 10 + i * 20);
+            this.ctx.strokeText(`${name}: ${text}`, 10, 10 + i * 20);
         }
 
         private drawNode(node: Flow.Node) {
@@ -64,14 +65,15 @@ namespace Flow {
             );
             let textPos: Flow.IPoint = {x:0,y:0}
             let textSize = 12;
-            if (this.viewScale <= 1 / (Flow.Chart.ScaleMultiplier * Flow.Chart.MinZoomLevel)) { // max zoom out
-                textPos.x = canvasPos.x// - node.getSize().x / 2 * this.viewScale;
+            if (this.viewScale == 1 / (Flow.Chart.ScaleMultiplier * Flow.Chart.MinZoomLevel)) { // max zoom out
+                textPos.x = canvasPos.x;
                 textPos.y = canvasPos.y - 10;
             }else{
-                textPos.x = canvasPos.x// - node.getSize().x / 2 * this.viewScale + 10 * this.viewScale,
-                textPos.y = canvasPos.y;
+                textPos.x = canvasPos.x;
+                // please excuse the magic numbers
+                textPos.y = canvasPos.y + 5 * this.viewScale;
                 if (this.viewScale >= 1) {
-                    textSize += 15 * this.viewScale;
+                    textSize += 14 * this.viewScale;
                 }
             }
             this.ctx.textAlign = "center";
@@ -99,11 +101,14 @@ namespace Flow {
                 nodeRect.y1,
                 nodeRect.x2,
                 nodeRect.y2
-            )
-            this.ctx.strokeText(
+            );
+            this.ctx.fillStyle = "#FFFFFF";
+            this.ctx.textAlign = "left";
+            this.ctx.font = "24px Consolas";
+            this.ctx.fillText(
                 node.name,
                 nodeRect.x1 + 10,
-                nodeRect.y1 + 10
+                nodeRect.y1 + 24
             );
         }
 
