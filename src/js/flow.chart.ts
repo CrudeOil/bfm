@@ -6,7 +6,7 @@ namespace Flow {
         // furthest allowed to be zoomed in
         public static MaxZoomLevel = 2;
         // furthest allowed to be zoomed out
-        public static MinZoomLevel = 4;
+        public static MinZoomLevel = 2;
 
         private canvasParent: HTMLDivElement;
         private canvas: HTMLCanvasElement;
