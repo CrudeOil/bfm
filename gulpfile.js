@@ -7,11 +7,11 @@ var sourcemaps = require('gulp-sourcemaps');
 
 
 var outdir = './out'
-var libs = '{bootstrap,jquery}'
+var libs = '{bootstrap,jquery,markdown-it}'
 
 // npm dependencies
 gulp.task('npm:copy', (cb) => {
-    gulp.src([`node_modules/${libs}/dist/*`, `node_modules/${libs}/dist/**/*`], {base: 'node_modules'})
+    gulp.src([`node_modules/${libs}/dist/*.min.js`, `node_modules/${libs}/dist/**/*.min.js`], {base: 'node_modules'})
         .pipe(gulp.dest(`${outdir}/lib/`));
     cb();
 });
