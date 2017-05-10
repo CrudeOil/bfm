@@ -22,10 +22,29 @@
     <div id="mainflowdiv">
       <canvas id="mainflow"></canvas>
     </div>
+
+
+    <div id="detailsPane" class="modal fade" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 id="detailsTitle" class="modal-title"></h1>
+          </div>
+          <div id="detailsBody" class="modal-body">
+            <p>One fine body&hellip;</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
     
     <!-- gulp:js -->
     <script src="../node_modules/jquery/dist/jquery.min.js"></script>
     <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="../node_modules/markdown-it/dist/markdown-it.min.js"></script>
     <script src="js/bfm.js"></script>
     <script src="js/flow.chart.js"></script>
     <script src="js/flow.chart.physics.js"></script>

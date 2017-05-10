@@ -6,3 +6,12 @@
     -ms-user-select: none; /* IE10+ */
     user-select: none;
 }
+
+.modal-content {
+    background-color: #454545;
+    color: #FFFFFF;
+}
+
+.close {
+    color: #FFFFFF;
+}

@@ -9,11 +9,11 @@ $().ready(() => {
 
         flowChart = Flow.Chart.loadChart(canvas, bioInfoChart);
 
-        // let n1: Flow.Node = flowChart.addNode("FASTQ", Flow.NodeType.data, 10, 0);
-        // let n2: Flow.Node = flowChart.addNode("FASTA", Flow.NodeType.data, -10, 0);
-        // let lastNode = n2;
-
-        // let e1: Flow.Edge = flowChart.addEdge(n1, n2);
+        flowChart.onNodeDetails = (node: Flow.Node) => {
+            $('#detailsPane').modal('show');
+            $('#detailsTitle').text(node.name);
+            $('#detailsBody').html(window.markdownit().render(node.description));
+        }
 
         document.onkeyup = (e) => {
             // c
@@ -29,19 +29,7 @@ $().ready(() => {
                             (Math.random() * (canvas.clientWidth)) - canvas.clientWidth/2,
                             (Math.random() * (canvas.clientHeight)) - canvas.clientHeight/2
                         );
-                        // lastNode = newNode;
                     }
-                    // b
-                    // if (e.keyCode === 66) {
-                    //     let newNode: Flow.Node = flowChart.addNode(
-                    //         word,
-                    //         Flow.NodeType.other,
-                    //         (Math.random() * (canvas.clientWidth)) - canvas.clientWidth/2,
-                    //         (Math.random() * (canvas.clientHeight)) - canvas.clientHeight/2
-                    //     );
-                    //     flowChart.addEdge(lastNode, newNode);
-                    //     lastNode = newNode;
-                    // }
                 });
             }
         }
