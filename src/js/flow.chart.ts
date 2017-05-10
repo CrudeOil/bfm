@@ -49,19 +49,12 @@ namespace Flow {
         }
 
         refresh = () => {
-            switch (this.controlsHandler.getState()) {
-                case Flow.ControlState.viewingNode:
-                    this.graphicsHandler.drawNodeView(this.controlsHandler.getViewingNode());
-                    break;
-                default:
-                    let objects = {
-                        nodes: this.nodes,
-                        edges: this.edges
-                    }
-                    this.physicsHandler.beforeDraw(objects);
-                    this.graphicsHandler.drawGraphView(objects);
-                    break;
+            let objects = {
+                nodes: this.nodes,
+                edges: this.edges
             }
+            this.physicsHandler.beforeDraw(objects);
+            this.graphicsHandler.drawGraphView(objects);
             window.requestAnimationFrame(this.refresh);
         }
 
@@ -75,7 +68,8 @@ namespace Flow {
 
         public addNodeFromJson(name: string, node: INodeJson) {
             let nodePos: Flow.IPoint = node.pos ? node.pos : {x:0, y:0}; // default to 0,0 if pos is not set
-            this.addNode(name, node.type, nodePos.x, nodePos.y);
+            let newNode: Flow.Node = this.addNode(name, node.type, nodePos.x, nodePos.y);
+            newNode.setDescription(node.description);
         }
 
         public addEdge(n1: Node, n2: Node): Edge {
@@ -97,6 +91,10 @@ namespace Flow {
                 }
             }
             return undefined;
+        }
+
+        public onNodeDetails = (node: Flow.Node) => {
+            console.log(`onNodeDetails called for ${node.name}`);
         }
 
         // does not check for existing connection

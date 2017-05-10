@@ -2,10 +2,10 @@
     "name": "Bioinformatics data types and applications",
     "nodes": {
         "FASTA": {
-            "content": "FASTA files contain sequences of nucleotides or amino acids"
+            "description": "FASTA files contain sequences of nucleotides or amino acids  \nExample:\n```\n@FASTA_HEADER\nACACTCATACTGCTATGATACACTGACT\n```"
         },
         "FASTQ": {
-            "content": "FASTQ files contain sequences of nubleotides, but with added quality score from NGS sequencing",
+            "description": "FASTQ files contain sequences of nucleotides, but with added quality score from NGS sequencing  \nExample:\n```\n@FASTQ_HEADER\nCCCACTTATTCTACACCTCTCATGTCTCTTCACCGTGCCAGACTAGAGTC\n+FASTQ_HEADER\nAAAAAEEEEEEEEEAEEEEEEEEEEEEEEEEEEEEEEEAEEEEEEEEEEE\n```\nThe header on the third line after the + symbol is optional, but the + symbol itself is not.\n\nThe fourth line of this format contains information about the quality of the read. Each symbol stands for a value which indicates the likelyhood that a base was read correctly. This value is known as the [Phred quality score](https://en.wikipedia.org/wiki/Phred_quality_score).",
             "pos": {
                 "x": 0,
                 "y": 0
@@ -15,7 +15,7 @@
     "edges": [
         {
             "name": "Scripts",
-            "content": "FASTQ can be converted into FASTA by removing the quality header and quality score on every 3rd and 4th line.",
+            "description": "FASTQ can be converted into FASTA by removing the quality header and quality score on every 3rd and 4th line.",
             "fromNode": "FASTQ",
             "toNode": "FASTA"
         }

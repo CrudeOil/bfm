@@ -16,7 +16,7 @@ namespace Flow {
     }
 
     export interface INodeJson {
-        content: string,
+        description: string,
         type: Flow.NodeType,
         pos?: Flow.IPoint
     }

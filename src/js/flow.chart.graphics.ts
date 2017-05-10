@@ -87,32 +87,6 @@ namespace Flow {
             );
         }
 
-        drawNodeView(node: Flow.Node) {
-            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-            let nodeRect: Flow.IRect = {
-                x1: this.canvas.clientWidth / 2 - node.getSize().x / 2,
-                y1: this.canvas.clientHeight / 2 - node.getSize().y / 2,
-                x2: node.getSize().x,
-                y2: node.getSize().y
-            }
-            this.ctx.fillStyle = node.getColor();
-            this.ctx.fillRect(
-                nodeRect.x1,
-                nodeRect.y1,
-                nodeRect.x2,
-                nodeRect.y2
-            );
-            this.ctx.fillStyle = "#FFFFFF";
-            this.ctx.textAlign = "left";
-            this.ctx.font = "24px Consolas";
-            this.ctx.fillText(
-                node.name,
-                nodeRect.x1 + 10,
-                nodeRect.y1 + 24
-            );
-        }
-
         private drawEdge(edge: Flow.Edge) {
             let firstNodePos = edge.getNodes()[0].getPos();
             let secondNodePos = edge.getNodes()[1].getPos();

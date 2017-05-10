@@ -89,9 +89,10 @@ namespace Flow {
                                 }
                                 this.selectedNodes = [clickedNode];
                                 if (this.lastClick && Date.now() - this.lastClick < 500) {
-                                    clickedNode.setState(NodeState.viewing);
-                                    this.viewingNode = clickedNode;
-                                    this.state = Flow.ControlState.viewingNode;
+                                    // clickedNode.setState(NodeState.viewing);
+                                    // this.viewingNode = clickedNode;
+                                    // this.state = Flow.ControlState.viewingNode;
+                                    chart.onNodeDetails(clickedNode);
                                     this.lastClick = undefined;
                                 }else{
                                     clickedNode.setState(NodeState.selected);

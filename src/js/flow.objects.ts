@@ -44,6 +44,7 @@ namespace Flow {
         public static ViewHeight = 200;
 
         name: string;
+        description: string;
         type: NodeType;
         pos: IPoint;
         color: string|CanvasGradient|CanvasPattern;
@@ -51,6 +52,7 @@ namespace Flow {
 
         public constructor(name: string, type: NodeType, color = "#0000FF") {
             this.name = name;
+            this.description = "This item does not have a description.";
             this.type = type;
             this.pos = {x:0,y:0};
             this.state = NodeState.active;
@@ -120,6 +122,14 @@ namespace Flow {
                 x2: p.x + Node.GraphWidth / 2 * scale,
                 y2: p.y + Node.GraphHeight / 2 * scale
             }
+        }
+
+        public setDescription(description: string) {
+            this.description = description;
+        }
+
+        public getDetails(): string {
+            return `# ${this.name}\n${this.description}`;
         }
     }
 }
