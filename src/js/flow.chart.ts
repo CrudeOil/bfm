@@ -72,8 +72,8 @@ namespace Flow {
             newNode.setDescription(node.description);
         }
 
-        public addEdge(from: Node, to: Node): Edge {
-            let newEdge: Edge = new Edge(from, to);
+        public addEdge(from: Node, to: Node, name: string): Edge {
+            let newEdge: Edge = new Edge(from, to, name);
             this.edges.push(newEdge);
             return newEdge;
         }
@@ -97,12 +97,16 @@ namespace Flow {
             console.log(`onNodeDetails called for ${node.name}`);
         }
 
+        public onEdgeDetails = (edge: Flow.Edge) => {
+            console.log(`onEdgeDetails called for ${edge.name}`);
+        }
+
         // does not check for existing connection
         public connectSelected(): void {
             let selectedNodes: Flow.Node[] = this.controlsHandler.getSelected()
             for (var i = 0; i < selectedNodes.length; i++) {
                 for (var j = i + 1; j < selectedNodes.length; j++) {
-                    this.addEdge(selectedNodes[i], selectedNodes[j]);
+                    this.addEdge(selectedNodes[i], selectedNodes[j], "");
                 }
             }
         }
@@ -115,7 +119,11 @@ namespace Flow {
             }
             for (var i = 0; i < chartJson.edges.length; i++) {
                 if (chartJson.edges[i].fromNode in newChart.nodeDict && chartJson.edges[i].toNode in newChart.nodeDict) {
-                    newChart.addEdge(newChart.nodeDict[chartJson.edges[i].fromNode], newChart.nodeDict[chartJson.edges[i].toNode]);
+                    newChart.addEdge(
+                        newChart.nodeDict[chartJson.edges[i].fromNode],
+                        newChart.nodeDict[chartJson.edges[i].toNode],
+                        newChart.edges[i].name
+                    );
                 }
             }
             return newChart;

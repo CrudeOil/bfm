@@ -107,10 +107,12 @@ namespace Flow {
         public static ArrowHeadLength = 20;
         public static ArrowHeadWidth = 10;
 
+        name: string;
         nodes: Node[];
         color: string|CanvasGradient|CanvasPattern;
 
-        public constructor(n0: Node, n1: Node, color: string = "#FFFFFF") {
+        public constructor(n0: Node, n1: Node, name: string, color: string = "#FFFFFF") {
+            this.name = name;
             this.nodes = [];
             this.nodes[0] = n0;
             this.nodes[1] = n1;
