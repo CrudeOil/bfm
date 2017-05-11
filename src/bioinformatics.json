@@ -10,14 +10,52 @@
                 "x": 0,
                 "y": 0
             }
+        },
+        "SAM": {
+            "description": "SAM files contain information on mapped and unmapped reads after alignment. SAM-files are plain-text files, as opposed to the binary-encoded BAM files. Because of this, SAM files are generally larger.",
+            "pos": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        "BAM": {
+            "description": "BAM files contain information on mapped and unmapped reads after alignment. BAN files contain the same information as SAM files, but are binary-encoded as opposed to plain-text. This encoding results in a smaller filesize.",
+            "pos": {
+                "x": 0,
+                "y": 0
+            }
         }
     },
     "edges": [
         {
-            "name": "Scripts",
+            "name": "Direct",
             "description": "FASTQ can be converted into FASTA by removing the quality header and quality score on every 3rd and 4th line.",
             "fromNode": "FASTQ",
             "toNode": "FASTA"
+        },
+        {
+            "name": "Alignment",
+            "description": "FASTQ files can be aligned on a reference genome using alignment tools such as Bowtie, STAR, BLAT and LAST",
+            "fromNode": "FASTQ",
+            "toNode": "SAM"
+        },
+        {
+            "name": "Alignment",
+            "description": "FASTA files can be aligned on a reference genome using alignment tools such as Bowtie, STAR, BLAT and LAST",
+            "fromNode": "FASTA",
+            "toNode": "SAM"
+        },
+        {
+            "name": "Alignment",
+            "description": "BAM files can be converted to SAM files using SAMTools",
+            "fromNode": "BAM",
+            "toNode": "SAM"
+        },
+        {
+            "name": "Alignment",
+            "description": "SAM files can be converted to BAM files using SAMTools",
+            "fromNode": "SAM",
+            "toNode": "BAM"
         }
     ]
 }
