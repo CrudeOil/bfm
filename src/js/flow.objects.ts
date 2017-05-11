@@ -6,37 +6,7 @@ namespace Flow {
         nodes: Node[],
         edges: Edge[]
     }
-
-    export class Edge {
-        nodes: Node[];
-        color: string|CanvasGradient|CanvasPattern;
-
-        public constructor(n0: Node, n1: Node, color: string = "#FFFFFF") {
-            this.nodes = [];
-            this.nodes[0] = n0;
-            this.nodes[1] = n1;
-            this.color = color;
-        }
-
-        public getNodes(): Node[] {
-            return [this.nodes[0], this.nodes[1]];
-        }
-    }
-
-    export enum NodeType {
-        data,
-        application,
-        other
-    }
-
-    export enum NodeState {
-        active,
-        disabled,
-        dragging,
-        selected,
-        viewing
-    }
-
+    
     export class Node {
         public static GraphWidth = 100;
         public static GraphHeight = 60;
@@ -131,5 +101,35 @@ namespace Flow {
         public getDetails(): string {
             return `# ${this.name}\n${this.description}`;
         }
+    }
+
+    export class Edge {
+        nodes: Node[];
+        color: string|CanvasGradient|CanvasPattern;
+
+        public constructor(n0: Node, n1: Node, color: string = "#FFFFFF") {
+            this.nodes = [];
+            this.nodes[0] = n0;
+            this.nodes[1] = n1;
+            this.color = color;
+        }
+
+        public getNodes(): Node[] {
+            return [this.nodes[0], this.nodes[1]];
+        }
+    }
+
+    export enum NodeType {
+        data,
+        application,
+        other
+    }
+
+    export enum NodeState {
+        active,
+        disabled,
+        dragging,
+        selected,
+        viewing
     }
 }
