@@ -88,20 +88,60 @@ namespace Flow {
         }
 
         private drawEdge(edge: Flow.Edge) {
-            let firstNodePos = edge.getNodes()[0].getPos();
-            let secondNodePos = edge.getNodes()[1].getPos();
+            let fromNode: Flow.Node = edge.getNodes()[0];
+            let toNode: Flow.Node = edge.getNodes()[1];
 
-            this.ctx.strokeStyle = edge.color;
-            this.ctx.beginPath();
-            this.ctx.moveTo(
-                this.translateToCanvas(firstNodePos).x,
-                this.translateToCanvas(firstNodePos).y
+            // is fromnode to left or right of tonode?
+            let x = 0;
+            if (this.translateToCanvas(fromNode.getPos()).x - fromNode.getSize().x / 2 > this.translateToCanvas(toNode.getPos()).x + toNode.getSize().x / 2 ) {
+                x = 1;
+            } else if (this.translateToCanvas(fromNode.getPos()).x + fromNode.getSize().x / 2 < this.translateToCanvas(toNode.getPos()).x - toNode.getSize().x / 2 ) {
+                x = -1;
+            }else{
+                x = 0;
+            }
+            // is fromnode above or below of tonode?
+            let y = 0;
+            if (this.translateToCanvas(fromNode.getPos()).y - fromNode.getSize().y / 2 > this.translateToCanvas(toNode.getPos()).y + toNode.getSize().y / 2 ) {
+                y = 1;
+            } else if (this.translateToCanvas(fromNode.getPos()).y + fromNode.getSize().y / 2 < this.translateToCanvas(toNode.getPos()).y - toNode.getSize().y / 2 ) {
+                y = -1;
+            }else{
+                y = 0;
+            }
+
+            let fromPos: Flow.IPoint = {
+                x: fromNode.getPos().x - fromNode.getSize().x / 2 * x,
+                y: fromNode.getPos().y - fromNode.getSize().y / 2 * y
+            }
+            let toPos: Flow.IPoint = {
+                x: toNode.getPos().x + toNode.getSize().x / 2 * x,
+                y: toNode.getPos().y + toNode.getSize().y / 2 * y
+            }
+
+            this.drawDebugText("edge x", `${x}`);
+            this.drawDebugText("edge y", `${y}`);
+
+            Flow.GraphicsHandler.drawArrow(this.ctx, this.translateToCanvas(fromPos), this.translateToCanvas(toPos));
+        }
+
+        public static drawArrow(ctx: CanvasRenderingContext2D,
+                                from: Flow.IPoint,
+                                to: Flow.IPoint,
+                                color: string|CanvasGradient|CanvasPattern = "#FFFFFF",
+                                scale = 1) 
+        {
+            ctx.strokeStyle = color;
+            ctx.beginPath();
+            ctx.moveTo(
+                from.x,
+                from.y
             );
-            this.ctx.lineTo(
-                this.translateToCanvas(secondNodePos).x,
-                this.translateToCanvas(secondNodePos).y
+            ctx.lineTo(
+                to.x,
+                to.y
             );
-            this.ctx.stroke();
+            ctx.stroke();
         }
 
         public translateToCanvas(p: IPoint): IPoint {

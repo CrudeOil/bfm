@@ -72,8 +72,8 @@ namespace Flow {
             newNode.setDescription(node.description);
         }
 
-        public addEdge(n1: Node, n2: Node): Edge {
-            let newEdge: Edge = new Edge(n1, n2);
+        public addEdge(from: Node, to: Node): Edge {
+            let newEdge: Edge = new Edge(from, to);
             this.edges.push(newEdge);
             return newEdge;
         }
