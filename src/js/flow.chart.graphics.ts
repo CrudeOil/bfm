@@ -119,9 +119,6 @@ namespace Flow {
                 y: toNode.getPos().y + toNode.getSize().y / 2 * y
             }
 
-            this.drawDebugText("edge x", `${x}`);
-            this.drawDebugText("edge y", `${y}`);
-
             Flow.GraphicsHandler.drawArrow(this.ctx, this.translateToCanvas(fromPos), this.translateToCanvas(toPos));
         }
 
