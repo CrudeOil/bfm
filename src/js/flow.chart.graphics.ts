@@ -3,7 +3,7 @@
 
 
 namespace Flow {
-    export class GraphicsHandler {
+    export class GraphicsHandler {        
         private canvas: HTMLCanvasElement;
         private ctx: CanvasRenderingContext2D;
         // vars for drawing stuff on canvas relative to view
@@ -137,11 +137,36 @@ namespace Flow {
                 from.x,
                 from.y
             );
+
+            // dimension deltas
+            let d: Flow.IPoint = {
+                x: to.x - from.x,
+                y: to.y - from.y
+            }
+            let dist = Flow.Util.GetDist(from, to);
+            let m = (to.y-from.y)/(to.x-from.x);
+            // point along the arrow where the head will start
+            let p: Flow.IPoint = {
+                // when we divide the coordinate delta by total distance, we get the proportion of the total distance to the coordinate delta
+                // we can then use this to give anything else the right proportions
+                x: to.x - Flow.Edge.ArrowHeadLength * d.x / dist, 
+                y: to.y - Flow.Edge.ArrowHeadLength * d.y / dist
+            }
             ctx.lineTo(
-                to.x,
-                to.y
+                p.x,
+                p.y
             );
             ctx.stroke();
+
+
+            ctx.beginPath();
+            ctx.moveTo(to.x, to.y);
+            // we can use the aforementioned proportions again by using the x proportion on the y coordinate and vice-versa
+            // this only works because the base of the arrowhead is perpendicular to the line.
+            ctx.lineTo(p.x - Flow.Edge.ArrowHeadWidth / 2 * d.y / dist, p.y + Flow.Edge.ArrowHeadWidth / 2 * d.x / dist);
+            ctx.lineTo(p.x + Flow.Edge.ArrowHeadWidth / 2 * d.y / dist, p.y - Flow.Edge.ArrowHeadWidth / 2 * d.x / dist);
+            ctx.closePath();
+            ctx.fill();
         }
 
         public translateToCanvas(p: IPoint): IPoint {

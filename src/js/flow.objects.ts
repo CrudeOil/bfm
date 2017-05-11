@@ -104,6 +104,9 @@ namespace Flow {
     }
 
     export class Edge {
+        public static ArrowHeadLength = 20;
+        public static ArrowHeadWidth = 10;
+
         nodes: Node[];
         color: string|CanvasGradient|CanvasPattern;
 
