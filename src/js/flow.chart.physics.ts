@@ -30,19 +30,13 @@ namespace Flow {
             d = Math.abs(d);
 
             let f = 0;
-            let fx = 0;
-            let fy = 0;
 
-            if (
-                !(direction === 1 && this.physicsSettings.springLength - d < 0) // ignore if only repelling and distance is fine
-                &&
-                !(direction === -1 && this.physicsSettings.springLength - d > 0) // ignore if only attracting and distance is fine
-            ) {
+            if (!(this.physicsSettings.springLength - d > 0 && direction === -1) && !(this.physicsSettings.springLength - d < 0 && direction === 1)) {
                 f = (this.physicsSettings.springLength - d) * this.physicsSettings.springStrength;
-                fx = ((dx / d) * f) / 2;
-                fy = ((dy / d) * f) / 2;
             }
 
+            let fx = ((dx / d) * f) / 2;
+            let fy = ((dy / d) * f) / 2;
 
             return [f, fx, fy];
         }
@@ -53,7 +47,7 @@ namespace Flow {
                 springForces = this.CalculateSpring(
                     objects.edges[i].getNodes()[0],
                     objects.edges[i].getNodes()[1],
-                    -1
+                    -1 // attract only
                 );
                 objects.edges[i].getNodes()[0].move(springForces[1], springForces[2]);
                 objects.edges[i].getNodes()[1].move(-springForces[1], -springForces[2]);
@@ -66,7 +60,7 @@ namespace Flow {
                     springForces = this.CalculateSpring(
                         objects.nodes[keys[i]],
                         objects.nodes[keys[j]],
-                        1
+                        1 // repel only
                     );
                     objects.nodes[keys[i]].move(springForces[1], springForces[2]);
                     objects.nodes[keys[j]].move(-springForces[1], -springForces[2]);
