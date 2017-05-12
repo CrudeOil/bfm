@@ -44,15 +44,17 @@ namespace Flow {
                 objects.edges[i].getNodes()[1].move(-springForces[1], -springForces[2]);
             }
 
-            for (var i = 0; i < objects.nodes.length; i++) {
-                for (var j = i+1; j < objects.nodes.length; j++) {
+            let keys = Object.keys(objects.nodes);
+
+            for (var i = 0; i < keys.length; i++) {
+                for (var j = i+1; j < keys.length; j++) {
                     springForces = this.CalculateSpring(
-                        objects.nodes[i],
-                        objects.nodes[j],
+                        objects.nodes[keys[i]],
+                        objects.nodes[keys[j]],
                         true
                     );
-                    objects.nodes[i].move(springForces[1], springForces[2]);
-                    objects.nodes[j].move(-springForces[1], -springForces[2]);
+                    objects.nodes[keys[i]].move(springForces[1], springForces[2]);
+                    objects.nodes[keys[j]].move(-springForces[1], -springForces[2]);
                 }
             }
         }

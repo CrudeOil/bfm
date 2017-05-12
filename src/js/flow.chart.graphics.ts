@@ -27,15 +27,15 @@ namespace Flow {
             this.viewScale = 1;
         }
 
-        public drawGraphView = (objects: Flow.Objects) => {
+        public draw = (objects: Flow.Objects) => {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
             for (var i = 0; i < objects.edges.length; i++ ) {
                 this.drawEdge(objects.edges[i]);
             }
 
-            for (var i = 0; i < objects.nodes.length; i++) {
-                this.drawNode(objects.nodes[i]);
+            for (var key of Object.keys(objects.nodes)) {
+                this.drawNode(objects.nodes[key]);
             }
             this.ctx.textAlign = "left";
             this.drawDebugText('x', `${this.viewOffset.x - this.canvas.clientWidth/2}`);

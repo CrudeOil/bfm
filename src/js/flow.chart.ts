@@ -1,17 +1,16 @@
 /// <reference path="flow.objects.ts" />
+/// <reference path="flow.chart.loader.ts" />
+
 
 
 namespace Flow {
     export class Chart {
         private chartSettings: Flow.IChartSettings;
 
-        private canvasParent: HTMLDivElement;
         private canvas: HTMLCanvasElement;
 
         // collections of edges and nodes
-        // TODO: merge into one dict
-        private nodes: Flow.Node[];
-        public nodeDict: {[name: string]: Flow.Node};
+        public nodes: {[name: string]: Flow.Node};
         private edges: Flow.Edge[];
 
         private physicsHandler: Flow.PhysicsHandler;
@@ -28,9 +27,7 @@ namespace Flow {
             this.canvas.width = canvas.parentElement.clientWidth;
             this.canvas.height = canvas.parentElement.clientHeight;
 
-            // TODO: merge into one dict
-            this.nodes = [];
-            this.nodeDict = {};
+            this.nodes = {};
             this.edges = [];
 
             this.physicsHandler = new PhysicsHandler(chartSettings.physicsSettings);
@@ -46,15 +43,15 @@ namespace Flow {
                 edges: this.edges
             }
             this.physicsHandler.beforeDraw(objects);
-            this.graphicsHandler.drawGraphView(objects);
+            this.graphicsHandler.draw(objects);
             window.requestAnimationFrame(this.refresh);
         }
 
         public addNode(name: string, type: NodeType, x: number, y: number): Node {
             let newNode: Node = new Node(name, type);
             newNode.setPos(x, y);
-            this.nodes.push(newNode);
-            this.nodeDict[newNode.name] = newNode;
+            this.nodes[name] = newNode;
+            this.nodes[newNode.name] = newNode;
             return newNode;
         }
 
@@ -75,11 +72,11 @@ namespace Flow {
             let canvasPoint: Flow.Point;
             let nodeRect: Flow.Rect;
 
-            for (var i = 0; i < this.nodes.length; i++) {
-                canvasPoint = this.graphicsHandler.translateToCanvas(this.nodes[i].getPos());
+            for (var key of Object.keys(this.nodes)) {
+                canvasPoint = this.graphicsHandler.translateToCanvas(this.nodes[key].getPos());
                 nodeRect = Node.getRect(canvasPoint, this.graphicsHandler.getScale())
                 if (x > nodeRect.x1 && x < nodeRect.x2 && y > nodeRect.y1 && y < nodeRect.y2) {
-                    return this.nodes[i];
+                    return this.nodes[key];
                 }
             }
             return undefined;
@@ -110,10 +107,10 @@ namespace Flow {
                 newChart.addNodeFromJson(nodeNames[i], chartJson.nodes[nodeNames[i]]);
             }
             for (var i = 0; i < chartJson.edges.length; i++) {
-                if (chartJson.edges[i].fromNode in newChart.nodeDict && chartJson.edges[i].toNode in newChart.nodeDict) {
+                if (chartJson.edges[i].fromNode in newChart.nodes && chartJson.edges[i].toNode in newChart.nodes) {
                     newChart.addEdge(
-                        newChart.nodeDict[chartJson.edges[i].fromNode],
-                        newChart.nodeDict[chartJson.edges[i].toNode],
+                        newChart.nodes[chartJson.edges[i].fromNode],
+                        newChart.nodes[chartJson.edges[i].toNode],
                         chartJson.edges[i].name
                     );
                 }

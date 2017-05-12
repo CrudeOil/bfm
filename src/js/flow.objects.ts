@@ -3,7 +3,7 @@
 
 namespace Flow {
     export interface Objects {
-        nodes: Node[],
+        nodes: {[name: string]: Flow.Node},
         edges: Edge[]
     }
     
