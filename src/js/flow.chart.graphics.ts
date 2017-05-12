@@ -119,18 +119,18 @@ namespace Flow {
                 y: toNode.getPos().y + toNode.getSize().y / 2 * y
             }
 
-            Flow.GraphicsHandler.drawArrow(this.ctx, this.translateToCanvas(fromPos), this.translateToCanvas(toPos));
+            this.drawArrow(this.translateToCanvas(fromPos), this.translateToCanvas(toPos));
         }
 
-        public static drawArrow(ctx: CanvasRenderingContext2D,
-                                from: Flow.Point,
-                                to: Flow.Point,
-                                color: string|CanvasGradient|CanvasPattern = "#FFFFFF",
-                                scale = 1) 
-        {
-            ctx.strokeStyle = color;
-            ctx.beginPath();
-            ctx.moveTo(
+        public drawArrow(
+            from: Flow.Point,
+            to: Flow.Point,
+            color: string|CanvasGradient|CanvasPattern = "#FFFFFF",
+            scale = 1
+            ){
+            this.ctx.strokeStyle = color;
+            this.ctx.beginPath();
+            this.ctx.moveTo(
                 from.x,
                 from.y
             );
@@ -140,22 +140,22 @@ namespace Flow {
             let dist = Flow.Util.GetDist(from, to);
             let m = (to.y-from.y)/(to.x-from.x);
             // point along the arrow where the head will start
-            let p: Flow.Point = new Flow.Point(to.x - Flow.Edge.ArrowHeadLength * d.x / dist, to.y - Flow.Edge.ArrowHeadLength * d.y / dist);
-            ctx.lineTo(
+            let p: Flow.Point = new Flow.Point(to.x - Flow.Edge.ArrowHeadLength * d.x * this.viewScale / dist, to.y - Flow.Edge.ArrowHeadLength * d.y * this.viewScale / dist);
+            this.ctx.lineTo(
                 p.x,
                 p.y
             );
-            ctx.stroke();
+            this.ctx.stroke();
 
 
-            ctx.beginPath();
-            ctx.moveTo(to.x, to.y);
+            this.ctx.beginPath();
+            this.ctx.moveTo(to.x, to.y);
             // we can use the aforementioned proportions again by using the x proportion on the y coordinate and vice-versa
             // this only works because the base of the arrowhead is perpendicular to the line.
-            ctx.lineTo(p.x - Flow.Edge.ArrowHeadWidth / 2 * d.y / dist, p.y + Flow.Edge.ArrowHeadWidth / 2 * d.x / dist);
-            ctx.lineTo(p.x + Flow.Edge.ArrowHeadWidth / 2 * d.y / dist, p.y - Flow.Edge.ArrowHeadWidth / 2 * d.x / dist);
-            ctx.closePath();
-            ctx.fill();
+            this.ctx.lineTo(p.x - Flow.Edge.ArrowHeadWidth / 2 * d.y * this.viewScale / dist, p.y + Flow.Edge.ArrowHeadWidth / 2 * d.x * this.viewScale / dist);
+            this.ctx.lineTo(p.x + Flow.Edge.ArrowHeadWidth / 2 * d.y * this.viewScale / dist, p.y - Flow.Edge.ArrowHeadWidth / 2 * d.x * this.viewScale / dist);
+            this.ctx.closePath();
+            this.ctx.fill();
         }
 
         public translateToCanvas(p: Point): Point {
