@@ -122,7 +122,7 @@ namespace Flow {
                     newChart.addEdge(
                         newChart.nodeDict[chartJson.edges[i].fromNode],
                         newChart.nodeDict[chartJson.edges[i].toNode],
-                        newChart.edges[i].name
+                        chartJson.edges[i].name
                     );
                 }
             }
