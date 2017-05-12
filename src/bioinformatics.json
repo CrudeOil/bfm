@@ -1,5 +1,18 @@
 {
-    "name": "Bioinformatics data types and applications",
+    "settings": {
+        "name": "Bioinformatics data types and applications",
+        "layout": "dynamic",
+        "physicsSettings": {
+            "springFriction": 1,
+            "springStrength": 0.5,
+            "springLength": 250
+        },
+        "viewSettings": {
+            "minZoomLevel": 2,
+            "maxZoomLevel": 2,
+            "zoomMultiplier": 2
+        }
+    },
     "nodes": {
         "FASTA": {
             "description": "FASTA files contain sequences of nucleotides or amino acids  \nExample:\n```\n@FASTA_HEADER\nACACTCATACTGCTATGATACACTGACT\n```"
@@ -46,13 +59,13 @@
             "toNode": "SAM"
         },
         {
-            "name": "Alignment",
+            "name": "SAMTools",
             "description": "BAM files can be converted to SAM files using SAMTools",
             "fromNode": "BAM",
             "toNode": "SAM"
         },
         {
-            "name": "Alignment",
+            "name": "SAMTools",
             "description": "SAM files can be converted to BAM files using SAMTools",
             "fromNode": "SAM",
             "toNode": "BAM"

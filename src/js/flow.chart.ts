@@ -3,15 +3,7 @@
 
 namespace Flow {
     export class Chart {
-        // view scale ViewMultiplier/
-        // 2 means zoom will be 0.25, 0.5, 1, 2, 4
-        // 3 means zoom will be 0.1, 0.3, 1, 3, 9
-        // etc...
-        public static ScaleMultiplier = 2;
-        // furthest allowed to be zoomed in
-        public static MaxZoomLevel = 2;
-        // furthest allowed to be zoomed out
-        public static MinZoomLevel = 2;
+        private chartSettings: Flow.IChartSettings;
 
         private canvasParent: HTMLDivElement;
         private canvas: HTMLCanvasElement;
@@ -26,7 +18,7 @@ namespace Flow {
         private graphicsHandler: Flow.GraphicsHandler;
         private controlsHandler: Flow.ControlHandler;
 
-        public constructor(canvas: HTMLCanvasElement) {
+        public constructor(canvas: HTMLCanvasElement, chartSettings: Flow.IChartSettings) {
             this.canvas = canvas;
 
             // needed for some conversion to actual canvas location in mouse events
@@ -41,8 +33,8 @@ namespace Flow {
             this.nodeDict = {};
             this.edges = [];
 
-            this.physicsHandler = new PhysicsHandler();
-            this.graphicsHandler = new GraphicsHandler(canvas);
+            this.physicsHandler = new PhysicsHandler(chartSettings.physicsSettings);
+            this.graphicsHandler = new GraphicsHandler(canvas, chartSettings.viewSettings);
             this.controlsHandler = new ControlHandler(this, this.physicsHandler, this.graphicsHandler)
 
             window.requestAnimationFrame(this.refresh);
@@ -112,7 +104,7 @@ namespace Flow {
         }
 
         public static loadChart(canvas: HTMLCanvasElement, chartJson: Flow.IChartJson): Flow.Chart {
-            let newChart: Flow.Chart = new Chart(canvas);
+            let newChart: Flow.Chart = new Chart(canvas, chartJson.settings);
             let nodeNames: string[] = Object.keys(chartJson.nodes);
             for (var i = 0; i < nodeNames.length; i++) {
                 newChart.addNodeFromJson(nodeNames[i], chartJson.nodes[nodeNames[i]]);
@@ -131,6 +123,10 @@ namespace Flow {
 
         public getCanvas(): HTMLCanvasElement {
             return this.canvas;
+        }
+
+        public getSettings(): Flow.IChartSettings {
+            return this.chartSettings;
         }
     }
 }

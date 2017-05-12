@@ -58,26 +58,4 @@ namespace Flow {
         }
         
     }
-
-
-    export interface INodeJson {
-        description: string,
-        type: Flow.NodeType,
-        pos?: Flow.Point
-    }
-
-
-    export interface IEdgeJson {
-        name: string,
-        content: string,
-        fromNode: string,
-        toNode: string
-    }
-
-
-    export interface IChartJson {
-        name: string,
-        nodes: {[name: string]: INodeJson},
-        edges: IEdgeJson[]
-    }
 }

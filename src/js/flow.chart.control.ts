@@ -30,7 +30,7 @@ namespace Flow {
             chart: Flow.Chart,
             physicsHandler: Flow.PhysicsHandler,
             graphicsHandler: Flow.GraphicsHandler
-            ) {
+        ) {
             this.canvas = chart.getCanvas();
             this.canvasRect = this.canvas.getBoundingClientRect();
 
@@ -206,7 +206,7 @@ namespace Flow {
                 );
 
                 if (e.wheelDelta === 120) { // mwheelup
-                    if (graphicsHandler.getScale() < Flow.Chart.ScaleMultiplier ** Flow.Chart.MaxZoomLevel) {
+                    if (graphicsHandler.getScale() < graphicsHandler.getSettings().zoomMultiplier ** graphicsHandler.getSettings().maxZoomLevel) {
                         graphicsHandler.scale(2);
                         graphicsHandler.moveView({
                             x: dOrigin.x,
@@ -214,7 +214,7 @@ namespace Flow {
                         });
                     }
                 }else{ // mwheeldown
-                    if (graphicsHandler.getScale() > Flow.Chart.ScaleMultiplier ** -Chart.MinZoomLevel) {
+                    if (graphicsHandler.getScale() > graphicsHandler.getSettings().zoomMultiplier ** -graphicsHandler.getSettings().maxZoomLevel) {
                         graphicsHandler.moveView({
                             x: -dOrigin.x/2,
                             y: -dOrigin.y/2

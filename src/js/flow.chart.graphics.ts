@@ -5,6 +5,7 @@
 namespace Flow {
     export class GraphicsHandler {        
         private canvas: HTMLCanvasElement;
+        private viewSettings: Flow.IViewSettings;
         private ctx: CanvasRenderingContext2D;
         // vars for drawing stuff on canvas relative to view
         private viewOffset: {x:number,y:number};
@@ -12,7 +13,9 @@ namespace Flow {
 
         private debugTexts: string[] = [];
 
-        public constructor(canvas: HTMLCanvasElement) {
+        public constructor(canvas: HTMLCanvasElement, viewSettings: IViewSettings) {
+            this.viewSettings = viewSettings;
+
             this.canvas = canvas;
             
             this.ctx = canvas.getContext("2d");
@@ -66,7 +69,7 @@ namespace Flow {
             );
             let textPos: Flow.Point = {x:0,y:0}
             let textSize = 12;
-            if (this.viewScale == 1 / (Flow.Chart.ScaleMultiplier * Flow.Chart.MinZoomLevel)) { // max zoom out
+            if (this.viewScale == 1 / (this.viewSettings.zoomMultiplier * this.viewSettings.minZoomLevel)) { // max zoom out
                 textPos.x = canvasPos.x;
                 textPos.y = canvasPos.y - 10;
             }else{
@@ -177,6 +180,10 @@ namespace Flow {
 
         public getViewOffset(): Point {
             return this.viewOffset;
+        }
+
+        public getSettings(): Flow.IViewSettings {
+            return this.viewSettings;
         }
 
         // from http://stackoverflow.com/questions/11023144/working-with-hex-strings-and-hex-values-more-easily-in-javascript

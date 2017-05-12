@@ -1,10 +1,12 @@
 namespace Flow {
     export class PhysicsHandler {
-        public static SpringFriction = 1;
-        public static SpringStrength = 0.5;
-        public static SpringLength = 250;
+        private physicsSettings: Flow.IPhysicsSettings;
 
-        public static CalculateSpring(n1: Node, n2: Node, repelOnly = false): number[] {
+        public constructor(physicsSettings: Flow.IPhysicsSettings) {
+            this.physicsSettings = physicsSettings;
+        }
+
+        public CalculateSpring(n1: Node, n2: Node, repelOnly = false): number[] {
             let dx = n1.getPos().x - n2.getPos().x;
             let dy = n1.getPos().y - n2.getPos().y;
             let d = Math.sqrt(dx**2 + dy**2);
@@ -21,8 +23,8 @@ namespace Flow {
             let fx = 0;
             let fy = 0;
 
-            if (!(repelOnly && PhysicsHandler.SpringLength - d < 0)) {
-                f = (PhysicsHandler.SpringLength - d) * PhysicsHandler.SpringStrength;
+            if (!(repelOnly && this.physicsSettings.springLength - d < 0)) {
+                f = (this.physicsSettings.springLength - d) * this.physicsSettings.springStrength;
                 fx = ((dx / d) * f) / 2;
                 fy = ((dy / d) * f) / 2;
             }
@@ -34,7 +36,7 @@ namespace Flow {
         public beforeDraw(objects: Flow.Objects) {
             var springForces: number[];
             for (var i = 0; i < objects.edges.length; i++) {
-                springForces = PhysicsHandler.CalculateSpring(
+                springForces = this.CalculateSpring(
                     objects.edges[i].getNodes()[0],
                     objects.edges[i].getNodes()[1]
                 );
@@ -44,7 +46,7 @@ namespace Flow {
 
             for (var i = 0; i < objects.nodes.length; i++) {
                 for (var j = i+1; j < objects.nodes.length; j++) {
-                    springForces = PhysicsHandler.CalculateSpring(
+                    springForces = this.CalculateSpring(
                         objects.nodes[i],
                         objects.nodes[j],
                         true
