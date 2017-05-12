@@ -64,7 +64,7 @@ namespace Flow {
                 node.getSize().x * this.viewScale,
                 node.getSize().y * this.viewScale
             );
-            let textPos: Flow.IPoint = {x:0,y:0}
+            let textPos: Flow.Point = {x:0,y:0}
             let textSize = 12;
             if (this.viewScale == 1 / (Flow.Chart.ScaleMultiplier * Flow.Chart.MinZoomLevel)) { // max zoom out
                 textPos.x = canvasPos.x;
@@ -110,11 +110,11 @@ namespace Flow {
                 y = 0;
             }
 
-            let fromPos: Flow.IPoint = {
+            let fromPos: Flow.Point = {
                 x: fromNode.getPos().x - fromNode.getSize().x / 2 * x,
                 y: fromNode.getPos().y - fromNode.getSize().y / 2 * y
             }
-            let toPos: Flow.IPoint = {
+            let toPos: Flow.Point = {
                 x: toNode.getPos().x + toNode.getSize().x / 2 * x,
                 y: toNode.getPos().y + toNode.getSize().y / 2 * y
             }
@@ -123,8 +123,8 @@ namespace Flow {
         }
 
         public static drawArrow(ctx: CanvasRenderingContext2D,
-                                from: Flow.IPoint,
-                                to: Flow.IPoint,
+                                from: Flow.Point,
+                                to: Flow.Point,
                                 color: string|CanvasGradient|CanvasPattern = "#FFFFFF",
                                 scale = 1) 
         {
@@ -136,19 +136,11 @@ namespace Flow {
             );
 
             // dimension deltas
-            let d: Flow.IPoint = {
-                x: to.x - from.x,
-                y: to.y - from.y
-            }
+            let d: Flow.Point = new Point(to.x - from.x, to.y - from.y);
             let dist = Flow.Util.GetDist(from, to);
             let m = (to.y-from.y)/(to.x-from.x);
             // point along the arrow where the head will start
-            let p: Flow.IPoint = {
-                // when we divide the coordinate delta by total distance, we get the proportion of the total distance to the coordinate delta
-                // we can then use this to give anything else the right proportions
-                x: to.x - Flow.Edge.ArrowHeadLength * d.x / dist, 
-                y: to.y - Flow.Edge.ArrowHeadLength * d.y / dist
-            }
+            let p: Flow.Point = new Flow.Point(to.x - Flow.Edge.ArrowHeadLength * d.x / dist, to.y - Flow.Edge.ArrowHeadLength * d.y / dist);
             ctx.lineTo(
                 p.x,
                 p.y
@@ -166,14 +158,11 @@ namespace Flow {
             ctx.fill();
         }
 
-        public translateToCanvas(p: IPoint): IPoint {
-            return {
-                x: p.x * this.viewScale + this.viewOffset.x,
-                y: p.y * this.viewScale + this.viewOffset.y
-            }
+        public translateToCanvas(p: Point): Point {
+            return new Flow.Point(p.x * this.viewScale + this.viewOffset.x, p.y * this.viewScale + this.viewOffset.y);
         }
 
-        public moveView(v: Flow.IPoint) {
+        public moveView(v: Flow.Point) {
             this.viewOffset.x += v.x;
             this.viewOffset.y += v.y;
         }
@@ -186,7 +175,7 @@ namespace Flow {
             return this.viewScale;
         }
 
-        public getViewOffset(): IPoint {
+        public getViewOffset(): Point {
             return this.viewOffset;
         }
 

@@ -54,5 +54,11 @@ namespace Flow {
                 }
             }
         }
+
+        // returns whether rectangles r1 and r2 collide using seperating axis theorem
+        public getCollision(r1: Flow.Rect, r2: Flow.Rect): boolean {
+            
+            return true;
+        }
     }
 }

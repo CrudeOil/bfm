@@ -67,7 +67,7 @@ namespace Flow {
         }
 
         public addNodeFromJson(name: string, node: INodeJson) {
-            let nodePos: Flow.IPoint = node.pos ? node.pos : {x:0, y:0}; // default to 0,0 if pos is not set
+            let nodePos: Flow.Point = node.pos ? node.pos : new Flow.Point(0,0); // default to 0,0 if pos is not set
             let newNode: Flow.Node = this.addNode(name, node.type, nodePos.x, nodePos.y);
             newNode.setDescription(node.description);
         }
@@ -80,8 +80,8 @@ namespace Flow {
 
         public getNodeAt(x: number, y: number): Node {
             let x1, x2, y1, y2: number;
-            let canvasPoint: Flow.IPoint;
-            let nodeRect: Flow.IRect;
+            let canvasPoint: Flow.Point;
+            let nodeRect: Flow.Rect;
 
             for (var i = 0; i < this.nodes.length; i++) {
                 canvasPoint = this.graphicsHandler.translateToCanvas(this.nodes[i].getPos());

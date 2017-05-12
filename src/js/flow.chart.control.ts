@@ -200,10 +200,10 @@ namespace Flow {
 
             // do the zooming business
             this.canvas.onmousewheel = (e: WheelEvent) => {
-                let dOrigin: IPoint = {
-                    x: graphicsHandler.getViewOffset().x - this.canvas.clientWidth / 2,
-                    y: graphicsHandler.getViewOffset().y - this.canvas.clientHeight / 2
-                }
+                let dOrigin: Point = new Flow.Point(
+                    graphicsHandler.getViewOffset().x - this.canvas.clientWidth / 2,
+                    graphicsHandler.getViewOffset().y - this.canvas.clientHeight / 2
+                );
 
                 if (e.wheelDelta === 120) { // mwheelup
                     if (graphicsHandler.getScale() < Flow.Chart.ScaleMultiplier ** Flow.Chart.MaxZoomLevel) {

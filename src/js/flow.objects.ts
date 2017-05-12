@@ -16,7 +16,7 @@ namespace Flow {
         name: string;
         description: string;
         type: NodeType;
-        pos: IPoint;
+        pos: Point;
         color: string|CanvasGradient|CanvasPattern;
         state: NodeState;
 
@@ -29,7 +29,7 @@ namespace Flow {
             this.color = color;
         }
 
-        public getPos(): IPoint {
+        public getPos(): Point {
             return this.pos;
         }
 
@@ -58,7 +58,7 @@ namespace Flow {
             }
         }
 
-        public getSize(): Flow.IPoint {
+        public getSize(): Flow.Point {
             switch (this.state) {
                 case Flow.NodeState.viewing:
                     return {
@@ -85,13 +85,13 @@ namespace Flow {
             }
         }
 
-        public static getRect(p: Flow.IPoint, scale: number): Flow.IRect {
-            return {
-                x1: p.x - Node.GraphWidth / 2 * scale,
-                y1: p.y - Node.GraphHeight / 2 * scale,
-                x2: p.x + Node.GraphWidth / 2 * scale,
-                y2: p.y + Node.GraphHeight / 2 * scale
-            }
+        public static getRect(p: Flow.Point, scale: number): Flow.Rect {
+            return new Flow.Rect(
+                p.x - Node.GraphWidth / 2 * scale,
+                p.y - Node.GraphHeight / 2 * scale,
+                p.x + Node.GraphWidth / 2 * scale,
+                p.y + Node.GraphHeight / 2 * scale
+            );
         }
 
         public setDescription(description: string) {
