@@ -43,11 +43,14 @@ namespace Flow {
 
         public constructor(x: number, y: number) {
             super(x, y);
-            this.m = Math.sqrt(x**2+y**2);
         }
 
         public static Project(v1: Flow.Vector, v2: Flow.Vector): number {
             return Vector.Dot(v1, new Flow.Point(v2.x / v2.m, v2.y / v2.m));
+        }
+
+        public getMagnitude() {
+            return Math.sqrt(this.x**2+this.y**2);
         }
     }
 
