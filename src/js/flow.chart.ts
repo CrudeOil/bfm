@@ -32,7 +32,9 @@ namespace Flow {
 
             this.physicsHandler = new PhysicsHandler(chartSettings.physicsSettings);
             this.graphicsHandler = new GraphicsHandler(canvas, chartSettings.viewSettings);
-            this.controlsHandler = new ControlHandler(this, this.physicsHandler, this.graphicsHandler)
+            this.controlsHandler = new ControlHandler(this, this.physicsHandler, this.graphicsHandler);
+
+            
 
             window.requestAnimationFrame(this.refresh);
         }

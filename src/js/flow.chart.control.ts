@@ -36,6 +36,9 @@ namespace Flow {
 
             this.state = Flow.ControlState.idle;
 
+            this.canvasDragStart = {x:0,y:0};
+            this.nodeDragStart = {x:0,y:0};
+
             // stuff we want to happen on mousedown:
             // * start dragging canvas if not on node
             // * start dragging node(s) if on node
@@ -44,11 +47,11 @@ namespace Flow {
                     let x = e.clientX - this.canvasRect.left;
                     let y = e.clientY - this.canvasRect.top;
                     let clickedNode = chart.getNodeAt(x, y);
+                    
                     if (clickedNode) {
-                        this.nodeDragStart = {x: e.x, y: e.y}
+                        this.nodeDragStart = {x: x, y: y};
                     }else{
-                        this.state = Flow.ControlState.draggingCanvas;
-                        this.canvasDragStart = {x: x, y: y}
+                        this.canvasDragStart = {x: x, y: y};
                     }
                 }
             };
@@ -110,28 +113,20 @@ namespace Flow {
                         break;
                     case Flow.ControlState.draggingCanvas:
                         if (this.canvasDragStart.x === x && this.canvasDragStart.y === y) {
-                            console.log("wow!");
                             for (var i = 0; i < this.selectedNodes.length; i++) {
                                 this.selectedNodes[i].setState(NodeState.active);
                                 this.selectedNodes = [];
                             }
                         }
-                        this.state = Flow.ControlState.idle;
+                        this.setState(Flow.ControlState.idle);
                         break;
                     case Flow.ControlState.draggingNode:
                         for (var i = 0; i < this.selectedNodes.length; i++) {
                             this.selectedNodes[i].setState(NodeState.selected);
                         }
-                        this.state = Flow.ControlState.idle;
-                        break;
-                    case Flow.ControlState.viewingEdge:
-
-                        break;
-                    case Flow.ControlState.viewingNode:
-
+                        this.setState(Flow.ControlState.idle);
                         break;
                 }
-
             };
 
             // stuff we want to happen when mouse leaves the screen:
@@ -139,10 +134,10 @@ namespace Flow {
             this.canvas.onmouseleave = () => {
                 switch (this.state) {
                     case Flow.ControlState.draggingCanvas:
-                        this.state = Flow.ControlState.idle;
+                        this.setState(Flow.ControlState.idle);
                         break;
                     case Flow.ControlState.draggingNode:
-                        this.state = Flow.ControlState.idle;
+                        this.setState(Flow.ControlState.idle);
                         for (var i = 0; i < this.selectedNodes.length; i++) {
                             this.selectedNodes[i].setState(NodeState.selected);
                         }
@@ -170,28 +165,33 @@ namespace Flow {
                         }
                         break;
                     case Flow.ControlState.idle:
-                        let x = e.clientX - this.canvasRect.left;
-                        let y = e.clientY - this.canvasRect.top;
-                        let clickedNode = chart.getNodeAt(x, y);
+                        if (e.buttons === 1) {
+                            let x = e.clientX - this.canvasRect.left;
+                            let y = e.clientY - this.canvasRect.top;
+                            let clickedNode = chart.getNodeAt(x, y);
 
-                        // only do this stuff while left mouse button is held down
-                        // also only do this when we moved a certain amount TODO: make this work, I don't think this works
-                        // TODO: change to right mouse button along with multi-select?
-                        if (clickedNode && e.buttons === 1 && (e.x - this.nodeDragStart.x < 5 || e.y - this.nodeDragStart.y < 5)) {
-                            this.state = Flow.ControlState.draggingNode;
+                            // only do this stuff while left mouse button is held down
+                            // also only do this when we moved a certain amount TODO: make this work, I don't think this works
+                            // TODO: change to right mouse button along with multi-select?
+                            if (clickedNode && e.buttons === 1 && (Math.abs(x - this.nodeDragStart.x) > 2 || Math.abs(y - this.nodeDragStart.y) > 2)) {
+                                this.setState(Flow.ControlState.draggingNode);
 
-                            var i = this.selectedNodes.indexOf(clickedNode);
-                            if (i === -1) {
-                                for (var i = 0; i < this.selectedNodes.length; i++) {
-                                    this.selectedNodes[i].setState(NodeState.active);
+                                var i = this.selectedNodes.indexOf(clickedNode);
+                                if (i === -1) {
+                                    for (var i = 0; i < this.selectedNodes.length; i++) {
+                                        this.selectedNodes[i].setState(NodeState.active);
+                                    }
+                                    this.selectedNodes = [clickedNode];
+                                    clickedNode.setState(NodeState.selected);
                                 }
-                                this.selectedNodes = [clickedNode];
-                                clickedNode.setState(NodeState.selected);
-                            }
 
-                            for (var i = 0; i < this.selectedNodes.length; i++) {
-                                this.selectedNodes[i].setState(NodeState.dragging);
-                                this.selectedNodes[i].move(e.x - this.nodeDragStart.x, e.y - this.nodeDragStart.y, true);
+                                for (var i = 0; i < this.selectedNodes.length; i++) {
+                                    this.selectedNodes[i].setState(NodeState.dragging);
+                                    // this.selectedNodes[i].move(e.x - this.nodeDragStart.x, e.y - this.nodeDragStart.y, true);
+                                }
+                            }
+                            if (!clickedNode && (Math.abs(x - this.canvasDragStart.x) > 2 || Math.abs(y - this.canvasDragStart.y) > 2)) {
+                                this.setState(Flow.ControlState.draggingCanvas);
                             }
                         }
                         break;
@@ -225,7 +225,6 @@ namespace Flow {
             };
 
             document.addEventListener('keyup', (e: KeyboardEvent) => {
-                console.log(this.state);
                 if (e.keyCode === 27 && this.getState() === Flow.ControlState.viewingNode) {
                     this.viewingNode.setState(Flow.NodeState.active);
                     this.setState(Flow.ControlState.idle);
@@ -243,6 +242,11 @@ namespace Flow {
 
         public setState(state: Flow.ControlState) {
             this.state = state;
+            this.onStateChanged();
+        }
+
+        private onStateChanged() {
+            console.log(this.state);
         }
 
         public getViewingNode(): Flow.Node {
