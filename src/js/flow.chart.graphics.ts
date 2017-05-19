@@ -122,7 +122,15 @@ namespace Flow {
                 y: toNode.getPos().y + toNode.getSize().y / 2 * y
             }
 
+
             this.drawArrow(this.translateToCanvas(fromPos), this.translateToCanvas(toPos));
+
+            let p: Flow.IPoint = this.translateToCanvas({
+                x: fromNode.getPos().x + (toNode.getPos().x - fromNode.getPos().x) / 2,
+                y: fromNode.getPos().y + (toNode.getPos().y - fromNode.getPos().y) / 2
+            });
+
+            this.ctx.fillText(edge.name, p.x, p.y)
         }
 
         public drawArrow(
