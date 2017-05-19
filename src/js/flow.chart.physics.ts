@@ -42,28 +42,30 @@ namespace Flow {
         }
 
         public beforeDraw(objects: Flow.Objects) {
-            let springForces: number[];
-            for (var i = 0; i < objects.edges.length; i++) {
-                springForces = this.CalculateSpring(
-                    objects.edges[i].getNodes()[0],
-                    objects.edges[i].getNodes()[1],
-                    -1 // attract only
-                );
-                objects.edges[i].getNodes()[0].move(springForces[1], springForces[2]);
-                objects.edges[i].getNodes()[1].move(-springForces[1], -springForces[2]);
-            }
-
-            let keys = Object.keys(objects.nodes);
-
-            for (var i = 0; i < keys.length; i++) {
-                for (var j = i+1; j < keys.length; j++) {
+            if (this.physicsSettings.springEnabled) {
+                let springForces: number[];
+                for (var i = 0; i < objects.edges.length; i++) {
                     springForces = this.CalculateSpring(
-                        objects.nodes[keys[i]],
-                        objects.nodes[keys[j]],
-                        1 // repel only
+                        objects.edges[i].getNodes()[0],
+                        objects.edges[i].getNodes()[1],
+                        -1 // attract only
                     );
-                    objects.nodes[keys[i]].move(springForces[1], springForces[2]);
-                    objects.nodes[keys[j]].move(-springForces[1], -springForces[2]);
+                    objects.edges[i].getNodes()[0].move(springForces[1], springForces[2]);
+                    objects.edges[i].getNodes()[1].move(-springForces[1], -springForces[2]);
+                }
+
+                let keys = Object.keys(objects.nodes);
+
+                for (var i = 0; i < keys.length; i++) {
+                    for (var j = i+1; j < keys.length; j++) {
+                        springForces = this.CalculateSpring(
+                            objects.nodes[keys[i]],
+                            objects.nodes[keys[j]],
+                            1 // repel only
+                        );
+                        objects.nodes[keys[i]].move(springForces[1], springForces[2]);
+                        objects.nodes[keys[j]].move(-springForces[1], -springForces[2]);
+                    }
                 }
             }
         }

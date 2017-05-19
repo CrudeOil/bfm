@@ -18,6 +18,8 @@ namespace Flow {
         private controlsHandler: Flow.ControlHandler;
 
         public constructor(canvas: HTMLCanvasElement, chartSettings: Flow.IChartSettings) {
+            this.chartSettings = chartSettings;
+
             this.canvas = canvas;
 
             // needed for some conversion to actual canvas location in mouse events
@@ -34,7 +36,8 @@ namespace Flow {
             this.graphicsHandler = new GraphicsHandler(canvas, chartSettings.viewSettings);
             this.controlsHandler = new ControlHandler(this, this.physicsHandler, this.graphicsHandler);
 
-            
+            this.graphicsHandler.moveView(this.chartSettings.viewSettings.startPosition);
+            this.graphicsHandler.scale(this.chartSettings.viewSettings.zoomMultiplier**(this.chartSettings.viewSettings.startZoomLevel));
 
             window.requestAnimationFrame(this.refresh);
         }

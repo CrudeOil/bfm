@@ -3,6 +3,7 @@
         "name": "Bioinformatics data types and applications",
         "layout": "dynamic",
         "physicsSettings": {
+            "springEnabled": true,
             "springFriction": 1,
             "springStrength": 0.5,
             "springLength": 250
@@ -10,7 +11,12 @@
         "viewSettings": {
             "minZoomLevel": 2,
             "maxZoomLevel": 2,
-            "zoomMultiplier": 2
+            "zoomMultiplier": 2,
+            "startPosition": {
+                "x": 0,
+                "y": 0
+            },
+            "startZoomLevel": 0
         }
     },
     "nodes": {
