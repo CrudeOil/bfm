@@ -13,8 +13,29 @@
     <nav class="navbar navbar-inverse">
       <div class="container-fluid">
         <ul class="nav navbar-nav">
-          <li class="active"><a href="#">Home <span class="sr-only">(current)</span></a></li>
-          <li><a href="about.html">About</a></li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">File <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a id="newChartBtn" href="#">New chart</a></li>
+              <li><a id="JsonBtn" href="#">Copy/Paste JSON</a></li>
+            </ul>
+          </li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">Edit <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a href="#">Select all nodes</a></li>
+              <li><a href="#">Add node</a></li>
+              <li><a href="#">Connect selected nodes</a></li>
+            </ul>
+          </li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">Help <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a href="#">Documentation</a></li>
+              <li><a href="https://github.com/CrudeOil/bfm">Github</a></li>
+              <li><a href="#">About</a></li>
+            </ul>
+          </li>
         </ul>
       </div>
     </nav>
@@ -32,10 +53,26 @@
             <h4 id="detailsTitle" class="modal-title"></h1>
           </div>
           <div id="detailsBody" class="modal-body">
-            <p>One fine body&hellip;</p>
+            <p></p>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="saveLoadPane" class="modal fade" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 id="detailsTitle" class="modal-title">Load/Save chart JSON</h4>
+          </div>
+          <textarea id="jsonText" class="form-control" rows="3"></textarea>
+          <div class="modal-footer">
+            <button id="loadJsonBtn" type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
           </div>
         </div>
       </div>

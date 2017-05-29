@@ -28,7 +28,7 @@ namespace Flow {
 
     export interface IEdgeJson {
         name: string,
-        content: string,
+        description: string,
         fromNode: string,
         toNode: string
     }

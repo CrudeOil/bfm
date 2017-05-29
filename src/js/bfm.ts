@@ -15,7 +15,19 @@ $().ready(() => {
             $('#detailsBody').html(window.markdownit().render(node.description));
         }
 
-        document.onkeyup = (e) => {
+        let JsonBtn = <HTMLLinkElement>document.getElementById('JsonBtn');
+        JsonBtn.onclick = (e) => {
+            $('#saveLoadPane').modal('show');
+            $('#jsonText').text(flowChart.getJson());
+        }
+        let loadJsonBtn = <HTMLLinkElement>document.getElementById('loadJsonBtn');
+        loadJsonBtn.onclick = (e) => {
+            let jsonText = $('#jsonText').text();
+            let chartJson = <Flow.IChartJson>JSON.parse(jsonText);
+            flowChart = Flow.Chart.loadChart(canvas, chartJson);
+        }
+
+        canvas.onkeyup = (e) => {
             // c
             if (e.keyCode === 67) {
                 flowChart.connectSelected();

@@ -22,7 +22,7 @@ namespace Flow {
 
         public constructor(name: string, type: NodeType, color = "#0000FF") {
             this.name = name;
-            this.description = "This item does not have a description.";
+            this.description = "This object does not have a description.";
             this.type = type;
             this.pos = {x:0,y:0};
             this.state = NodeState.active;
@@ -101,6 +101,15 @@ namespace Flow {
         public getDetails(): string {
             return `# ${this.name}\n${this.description}`;
         }
+
+        // TODO: make proper
+        public getJson(): Flow.INodeJson {
+            return {
+                description: this.description,
+                type: this.type,
+                pos: this.pos
+            }
+        }
     }
 
     export class Edge {
@@ -108,19 +117,31 @@ namespace Flow {
         public static ArrowHeadWidth = 10;
 
         name: string;
-        nodes: Node[];
+        description: string;
+        fromNode: Node;
+        toNode: Node;
         color: string|CanvasGradient|CanvasPattern;
 
-        public constructor(n0: Node, n1: Node, name: string, color: string = "#FFFFFF") {
+        public constructor(fromNode: Node, toNode: Node, name: string, color: string = "#FFFFFF") {
             this.name = name;
-            this.nodes = [];
-            this.nodes[0] = n0;
-            this.nodes[1] = n1;
+            this.description = "This object does not have a description.";
+            this.fromNode = fromNode;
+            this.toNode = toNode;
             this.color = color;
         }
 
         public getNodes(): Node[] {
-            return [this.nodes[0], this.nodes[1]];
+            return [this.fromNode, this.toNode];
+        }
+
+        // TODO: make proper
+        public getJson(): Flow.IEdgeJson {
+            return {
+                name: this.name,
+                description: this.description,
+                fromNode: this.fromNode.name,
+                toNode: this.toNode.name
+            }
         }
     }
 

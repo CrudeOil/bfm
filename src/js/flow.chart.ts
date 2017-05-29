@@ -130,5 +130,29 @@ namespace Flow {
         public getSettings(): Flow.IChartSettings {
             return this.chartSettings;
         }
+
+        public getJson(): string {
+            let nodes: {[name: string]: Flow.INodeJson} = {};
+            for (var node in this.nodes) {
+                nodes[node] = this.nodes[node].getJson();
+            }
+
+            let edges: Flow.IEdgeJson[] = [];
+            for (var i in this.edges) {
+                edges.push({
+                    name: this.edges[i].name,
+                    description: this.edges[i].description,
+                    fromNode: this.edges[i].fromNode.name,
+                    toNode: this.edges[i].toNode.name
+                })
+            }
+
+            let chartJson: Flow.IChartJson = {
+                settings: this.chartSettings,
+                nodes: nodes,
+                edges: edges
+            }
+            return JSON.stringify(chartJson);
+        }
     }
 }
