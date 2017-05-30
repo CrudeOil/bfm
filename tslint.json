@@ -6,8 +6,7 @@
         ],
         // we're using typescript here
         "array-type": [
-            "array",
-            "array-simple",
+            true,
             "generic"
         ],
         // data => {}; vs (data) => {};
@@ -25,10 +24,12 @@
         "eofline": true,
         // go forth and argue
         "indent": [
+            true,
             "spaces"
         ],
         // hopefully increases readability
         "interface-name": [
+            true,
             "always-prefix"
         ],
         // consistency

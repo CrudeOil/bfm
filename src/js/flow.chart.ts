@@ -11,7 +11,7 @@ namespace Flow {
 
         // collections of edges and nodes
         public nodes: {[name: string]: Flow.Node};
-        private edges: Flow.Edge[];
+        private edges: Array<Flow.Edge>;
 
         private physicsHandler: Flow.PhysicsHandler;
         private graphicsHandler: Flow.GraphicsHandler;
@@ -97,7 +97,7 @@ namespace Flow {
 
         // does not check for existing connection
         public connectSelected(): void {
-            let selectedNodes: Flow.Node[] = this.controlsHandler.getSelected()
+            let selectedNodes: Array<Flow.Node> = this.controlsHandler.getSelected()
             for (var i = 0; i < selectedNodes.length; i++) {
                 for (var j = i + 1; j < selectedNodes.length; j++) {
                     this.addEdge(selectedNodes[i], selectedNodes[j], "");
@@ -107,7 +107,7 @@ namespace Flow {
 
         public static loadChart(canvas: HTMLCanvasElement, chartJson: Flow.IChartJson): Flow.Chart {
             let newChart: Flow.Chart = new Chart(canvas, chartJson.settings);
-            let nodeNames: string[] = Object.keys(chartJson.nodes);
+            let nodeNames: Array<string> = Object.keys(chartJson.nodes);
             for (var i = 0; i < nodeNames.length; i++) {
                 newChart.addNodeFromJson(nodeNames[i], chartJson.nodes[nodeNames[i]]);
             }
@@ -137,7 +137,7 @@ namespace Flow {
                 nodes[node] = this.nodes[node].getJson();
             }
 
-            let edges: Flow.IEdgeJson[] = [];
+            let edges: Array<Flow.IEdgeJson> = [];
             for (var i in this.edges) {
                 edges.push({
                     name: this.edges[i].name,

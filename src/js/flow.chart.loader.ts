@@ -36,6 +36,6 @@ namespace Flow {
     export interface IChartJson {
         settings: IChartSettings,
         nodes: {[name: string]: INodeJson},
-        edges: IEdgeJson[]
+        edges: Array<IEdgeJson>
     }
 }

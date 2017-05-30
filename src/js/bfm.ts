@@ -15,8 +15,8 @@ $().ready(() => {
             $('#detailsBody').html(window.markdownit().render(node.description));
         }
 
-        let JsonBtn = <HTMLLinkElement>document.getElementById('JsonBtn');
-        JsonBtn.onclick = (e) => {
+        let jsonBtn = <HTMLLinkElement>document.getElementById('JsonBtn');
+        jsonBtn.onclick = (e) => {
             $('#saveLoadPane').modal('show');
             $('#jsonText').text(flowChart.getJson());
         }

@@ -18,7 +18,7 @@ namespace Flow {
         // movement of canvas and nodes
         private canvasDragStart: {x:number, y:number};
         private nodeDragStart: {x:number, y:number};
-        private selectedNodes: Flow.Node[] = []
+        private selectedNodes: Array<Flow.Node> = []
         private viewingNode: Flow.Node;
         private viewingEdge: Flow.Edge;
         

@@ -1,17 +1,17 @@
-/// <reference path="flow.util.ts" />
+/// <reference path="flow.chart.util.ts" />
 
 
 namespace Flow {
-    export interface Objects {
+    export interface IObjects {
         nodes: {[name: string]: Flow.Node},
-        edges: Edge[]
+        edges: Array<Edge>
     }
     
     export class Node {
-        public static GraphWidth = 100;
-        public static GraphHeight = 60;
-        public static ViewWidth = 500;
-        public static ViewHeight = 200;
+        public static GRAPHWIDTH = 100;
+        public static GRAPHHEIGHT = 60;
+        public static VIEWWIDTH = 500;
+        public static VIEWHEIGHT = 200;
 
         name: string;
         description: string;
@@ -62,13 +62,13 @@ namespace Flow {
             switch (this.state) {
                 case Flow.NodeState.viewing:
                     return {
-                        x: Flow.Node.ViewWidth,
-                        y: Flow.Node.ViewHeight
+                        x: Flow.Node.VIEWWIDTH,
+                        y: Flow.Node.VIEWHEIGHT
                     }
                 default:
                     return {
-                        x: Flow.Node.GraphWidth,
-                        y: Flow.Node.GraphHeight
+                        x: Flow.Node.GRAPHWIDTH,
+                        y: Flow.Node.GRAPHHEIGHT
                     }
             }
         }
@@ -87,10 +87,10 @@ namespace Flow {
 
         public static getRect(p: Flow.Point, scale: number): Flow.Rect {
             return new Flow.Rect(
-                p.x - Node.GraphWidth / 2 * scale,
-                p.y - Node.GraphHeight / 2 * scale,
-                p.x + Node.GraphWidth / 2 * scale,
-                p.y + Node.GraphHeight / 2 * scale
+                p.x - Node.GRAPHWIDTH / 2 * scale,
+                p.y - Node.GRAPHHEIGHT / 2 * scale,
+                p.x + Node.GRAPHWIDTH / 2 * scale,
+                p.y + Node.GRAPHHEIGHT / 2 * scale
             );
         }
 
@@ -113,8 +113,8 @@ namespace Flow {
     }
 
     export class Edge {
-        public static ArrowHeadLength = 20;
-        public static ArrowHeadWidth = 10;
+        public static ARROWHEADLENGTH = 20;
+        public static ARROWHEADWIDTH = 10;
 
         name: string;
         description: string;
@@ -130,7 +130,7 @@ namespace Flow {
             this.color = color;
         }
 
-        public getNodes(): Node[] {
+        public getNodes(): Array<Node> {
             return [this.fromNode, this.toNode];
         }
 

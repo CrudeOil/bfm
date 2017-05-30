@@ -26,7 +26,7 @@ namespace Flow {
             this.y2 = y2;
         }
 
-        public getEdges(): Flow.Point[] {
+        public getEdges(): Array<Flow.Point> {
             // clockwise from top-left
             return [
                 {x: this.x1, y: this.y1},

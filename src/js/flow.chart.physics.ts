@@ -16,7 +16,7 @@ namespace Flow {
          * 
          * @memberOf PhysicsHandler
          */
-        public CalculateSpring(n1: Node, n2: Node, direction: number = 0): number[] {
+        public CalculateSpring(n1: Node, n2: Node, direction: number = 0): Array<number> {
             let dx = n1.getPos().x - n2.getPos().x;
             let dy = n1.getPos().y - n2.getPos().y;
             let d = Math.sqrt(dx**2 + dy**2);
@@ -41,9 +41,9 @@ namespace Flow {
             return [f, fx, fy];
         }
 
-        public beforeDraw(objects: Flow.Objects) {
+        public beforeDraw(objects: Flow.IObjects) {
             if (this.physicsSettings.springEnabled) {
-                let springForces: number[];
+                let springForces: Array<number>;
                 for (var i = 0; i < objects.edges.length; i++) {
                     springForces = this.CalculateSpring(
                         objects.edges[i].getNodes()[0],

@@ -13,7 +13,7 @@ namespace Flow {
         private viewOffset: {x:number,y:number};
         private viewScale: number;
 
-        private debugTexts: string[] = [];
+        private debugTexts: Array<string> = [];
 
         public constructor(canvas: HTMLCanvasElement, viewSettings: IViewSettings) {
             this.viewSettings = viewSettings;
@@ -29,7 +29,7 @@ namespace Flow {
             this.viewScale = 1;
         }
 
-        public draw = (objects: Flow.Objects) => {
+        public draw = (objects: Flow.IObjects) => {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
             for (var i = 0; i < objects.edges.length; i++ ) {
@@ -71,7 +71,7 @@ namespace Flow {
             );
             let textPos: Flow.Point = {x:0,y:0}
             let textSize = 12;
-            if (this.viewScale == 1 / (this.viewSettings.zoomMultiplier * this.viewSettings.minZoomLevel)) { // max zoom out
+            if (this.viewScale === 1 / (this.viewSettings.zoomMultiplier * this.viewSettings.minZoomLevel)) { // max zoom out
                 textPos.x = canvasPos.x;
                 textPos.y = canvasPos.y - 10;
             }else{
