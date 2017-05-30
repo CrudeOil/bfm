@@ -7,6 +7,7 @@ namespace Flow {
     }
 
     export interface IViewSettings {
+        edgeType: string,
         minZoomLevel: number,
         maxZoomLevel: number,
         zoomMultiplier: number,

@@ -93,6 +93,29 @@ namespace Flow {
         }
 
         private drawEdge(edge: Flow.Edge) {
+            switch (this.viewSettings.edgeType) {
+                case "polyline": 
+                    this.drawPolyLineEdge(edge);
+                    break;
+                case "orthagonal":
+                    this.drawOrthagonalEdge(edge);
+                    break;
+                case "direct":
+                    // passthrough
+                default:
+                    this.drawDirectEdge(edge);
+            }
+        }
+
+        public drawPolyLineEdge(edge: Flow.Edge) {
+
+        }
+
+        public drawOrthagonalEdge(edge: Flow.Edge) {
+
+        }
+
+        public drawDirectEdge(edge: Flow.Edge) {
             let fromNode: Flow.Node = edge.getNodes()[0];
             let toNode: Flow.Node = edge.getNodes()[1];
 

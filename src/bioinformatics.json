@@ -1,7 +1,6 @@
 {
     "settings": {
         "name": "Bioinformatics data types and applications",
-        "layout": "dynamic",
         "physicsSettings": {
             "springEnabled": true,
             "springFriction": 1,
@@ -9,6 +8,7 @@
             "springLength": 250
         },
         "viewSettings": {
+            "edgeType": "direct",
             "minZoomLevel": 2,
             "maxZoomLevel": 2,
             "zoomMultiplier": 2,
