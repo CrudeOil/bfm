@@ -19,11 +19,6 @@
         "comment-format": [
             false
         ],
-        "completed-docs": [
-            "classes",
-            "functions",
-            "methods"
-        ],
         // totally increases readability
         "curly": true,
         // gets rid of the passive-aggressive icon at the bottom of files on github
