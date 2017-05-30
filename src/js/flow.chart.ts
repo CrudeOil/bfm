@@ -152,7 +152,7 @@ namespace Flow {
                 nodes: nodes,
                 edges: edges
             }
-            return JSON.stringify(chartJson);
+            return JSON.stringify(chartJson, null, '    ');
         }
     }
 }
