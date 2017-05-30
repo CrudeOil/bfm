@@ -12,11 +12,11 @@ namespace Flow {
          * @param {Node} n1 first node
          * @param {Node} n2 second node
          * @param {number} [direction=0] directions which are relevant. 0 = both, 1 = repel only, -1 = attract only
-         * @returns {number[]} a force vector
+         * @returns {Flow.Vector} a force vector
          * 
          * @memberOf PhysicsHandler
          */
-        public CalculateSpring(n1: Node, n2: Node, direction: number = 0): Array<number> {
+        public CalculateSpring(n1: Node, n2: Node, direction: number = 0): Flow.Vector {
             let dx = n1.getPos().x - n2.getPos().x;
             let dy = n1.getPos().y - n2.getPos().y;
             let d = Math.sqrt(dx**2 + dy**2);
@@ -38,24 +38,27 @@ namespace Flow {
             let fx = ((dx / d) * f) / 2;
             let fy = ((dy / d) * f) / 2;
 
-            return [f, fx, fy];
+            return new Flow.Vector(fx, fy);
         }
 
         public beforeDraw(objects: Flow.IObjects) {
             if (this.physicsSettings.springEnabled) {
-                let springForces: Array<number>;
+                let springForces: Flow.Vector;
+
+                // connected nodes attract
                 for (var i = 0; i < objects.edges.length; i++) {
                     springForces = this.CalculateSpring(
                         objects.edges[i].getNodes()[0],
                         objects.edges[i].getNodes()[1],
                         -1 // attract only
                     );
-                    objects.edges[i].getNodes()[0].move(springForces[1], springForces[2]);
-                    objects.edges[i].getNodes()[1].move(-springForces[1], -springForces[2]);
+                    objects.edges[i].getNodes()[0].move(springForces.x, springForces.y);
+                    objects.edges[i].getNodes()[1].move(-springForces.x, -springForces.y);
                 }
 
                 let keys = Object.keys(objects.nodes);
 
+                // all nodes repel
                 for (var i = 0; i < keys.length; i++) {
                     for (var j = i+1; j < keys.length; j++) {
                         springForces = this.CalculateSpring(
@@ -63,8 +66,8 @@ namespace Flow {
                             objects.nodes[keys[j]],
                             1 // repel only
                         );
-                        objects.nodes[keys[i]].move(springForces[1], springForces[2]);
-                        objects.nodes[keys[j]].move(-springForces[1], -springForces[2]);
+                        objects.nodes[keys[i]].move(springForces.x, springForces.y);
+                        objects.nodes[keys[j]].move(-springForces.x, -springForces.y);
                     }
                 }
             }
