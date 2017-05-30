@@ -121,18 +121,18 @@ namespace Flow {
 
             // is fromnode to left or right of tonode?
             let x = 0;
-            if (this.translateToCanvas(fromNode.getPos()).x - fromNode.getSize().x / 2 > this.translateToCanvas(toNode.getPos()).x + toNode.getSize().x / 2 ) {
+            if (this.translateToCanvas(fromNode.getPos()).x - fromNode.getSize().x / 2 * this.viewScale > this.translateToCanvas(toNode.getPos()).x + toNode.getSize().x / 2 * this.viewScale ) {
                 x = 1;
-            } else if (this.translateToCanvas(fromNode.getPos()).x + fromNode.getSize().x / 2 < this.translateToCanvas(toNode.getPos()).x - toNode.getSize().x / 2 ) {
+            } else if (this.translateToCanvas(fromNode.getPos()).x + fromNode.getSize().x / 2 * this.viewScale < this.translateToCanvas(toNode.getPos()).x - toNode.getSize().x / 2 * this.viewScale ) {
                 x = -1;
             }else{
                 x = 0;
             }
             // is fromnode above or below of tonode?
             let y = 0;
-            if (this.translateToCanvas(fromNode.getPos()).y - fromNode.getSize().y / 2 > this.translateToCanvas(toNode.getPos()).y + toNode.getSize().y / 2 ) {
+            if (this.translateToCanvas(fromNode.getPos()).y - fromNode.getSize().y / 2 * this.viewScale > this.translateToCanvas(toNode.getPos()).y + toNode.getSize().y / 2 * this.viewScale ) {
                 y = 1;
-            } else if (this.translateToCanvas(fromNode.getPos()).y + fromNode.getSize().y / 2 < this.translateToCanvas(toNode.getPos()).y - toNode.getSize().y / 2 ) {
+            } else if (this.translateToCanvas(fromNode.getPos()).y + fromNode.getSize().y / 2 * this.viewScale < this.translateToCanvas(toNode.getPos()).y - toNode.getSize().y / 2 * this.viewScale ) {
                 y = -1;
             }else{
                 y = 0;
