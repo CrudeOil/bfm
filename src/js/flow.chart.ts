@@ -105,22 +105,28 @@ namespace Flow {
             }
         }
 
-        public static loadChart(canvas: HTMLCanvasElement, chartJson: Flow.IChartJson): Flow.Chart {
-            let newChart: Flow.Chart = new Chart(canvas, chartJson.settings);
+        public load(chartJson: Flow.IChartJson): void {
             let nodeNames: Array<string> = Object.keys(chartJson.nodes);
             for (var i = 0; i < nodeNames.length; i++) {
-                newChart.addNodeFromJson(nodeNames[i], chartJson.nodes[nodeNames[i]]);
+                this.addNodeFromJson(nodeNames[i], chartJson.nodes[nodeNames[i]]);
             }
             for (var i = 0; i < chartJson.edges.length; i++) {
-                if (chartJson.edges[i].fromNode in newChart.nodes && chartJson.edges[i].toNode in newChart.nodes) {
-                    newChart.addEdge(
-                        newChart.nodes[chartJson.edges[i].fromNode],
-                        newChart.nodes[chartJson.edges[i].toNode],
+                if (chartJson.edges[i].fromNode in this.nodes && chartJson.edges[i].toNode in this.nodes) {
+                    this.addEdge(
+                        this.nodes[chartJson.edges[i].fromNode],
+                        this.nodes[chartJson.edges[i].toNode],
                         chartJson.edges[i].name
                     );
                 }
             }
-            return newChart;
+
+            this.physicsHandler.setSettings(chartJson.settings.physicsSettings);
+            this.graphicsHandler.setSettings(chartJson.settings.viewSettings);
+        }
+
+        public clear(): void {
+            this.nodes = {};
+            this.edges = [];
         }
 
         public getCanvas(): HTMLCanvasElement {
@@ -152,7 +158,7 @@ namespace Flow {
                 nodes: nodes,
                 edges: edges
             }
-            return JSON.stringify(chartJson, null, '    ');
+            return JSON.stringify(chartJson, undefined, '    ');
         }
     }
 }

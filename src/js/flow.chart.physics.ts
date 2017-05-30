@@ -75,5 +75,9 @@ namespace Flow {
             
             return true;
         }
+
+        public setSettings(physicsSettings: IPhysicsSettings): void {
+            this.physicsSettings = physicsSettings;
+        }
     }
 }

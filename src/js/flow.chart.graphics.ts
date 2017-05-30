@@ -192,6 +192,10 @@ namespace Flow {
             return this.viewOffset;
         }
 
+        public setSettings(viewSettings: IViewSettings): void {
+            this.viewSettings = viewSettings;
+        }
+
         public getSettings(): Flow.IViewSettings {
             return this.viewSettings;
         }

@@ -4,10 +4,12 @@
 let flowChart: Flow.Chart;
 
 $().ready(() => {
-    $.ajax({url: 'bioinformatics.json', dataType: "json", type: 'GET', success: (bioInfoChart) => {
+    $.ajax({url: 'bioinformatics.json', dataType: "json", type: 'GET', success: (bioInfoChart: Flow.IChartJson) => {
         let canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("mainflow");
 
-        flowChart = Flow.Chart.loadChart(canvas, bioInfoChart);
+        flowChart = new Flow.Chart(canvas, bioInfoChart.settings);
+
+        flowChart.load(bioInfoChart);
 
         flowChart.onNodeDetails = (node: Flow.Node) => {
             $('#detailsPane').modal('show');
@@ -22,9 +24,11 @@ $().ready(() => {
         }
         let loadJsonBtn = <HTMLLinkElement>document.getElementById('loadJsonBtn');
         loadJsonBtn.onclick = (e) => {
-            let jsonText = $('#jsonText').text();
+            let jsonText = $('#jsonText').val();
             let chartJson = <Flow.IChartJson>JSON.parse(jsonText);
-            flowChart = Flow.Chart.loadChart(canvas, chartJson);
+
+            flowChart.clear();
+            flowChart.load(chartJson);
         }
 
         canvas.onkeyup = (e) => {
