@@ -123,15 +123,15 @@ namespace Flow {
             let x = 0;
             if (fromNode.getPos().x - fromNode.getSize().x / 2 > toNode.getPos().x + toNode.getSize().x / 2 ) {
                 x = 1;
-            } if ((fromNode.getPos()).x + fromNode.getSize().x / 2 < (toNode.getPos()).x - toNode.getSize().x / 2 ) {
+            } if (fromNode.getPos().x + fromNode.getSize().x / 2 < toNode.getPos().x - toNode.getSize().x / 2 ) {
                 x = -1;
             }
             
             // is fromnode above or below of tonode?
             let y = 0;
-            if ((fromNode.getPos()).y - fromNode.getSize().y / 2 > (toNode.getPos()).y + toNode.getSize().y / 2 ) {
+            if (fromNode.getPos().y - fromNode.getSize().y / 2 > toNode.getPos().y + toNode.getSize().y / 2 ) {
                 y = 1;
-            } if ((fromNode.getPos()).y + fromNode.getSize().y / 2 < (toNode.getPos()).y - toNode.getSize().y / 2 ) {
+            } if (fromNode.getPos().y + fromNode.getSize().y / 2 < toNode.getPos().y - toNode.getSize().y / 2 ) {
                 y = -1;
             }
             
