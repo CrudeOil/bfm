@@ -1,4 +1,4 @@
-/// <reference path="flow.objects.ts" />
+/// <reference path="flow.chart.objects.ts" />
 /// <reference path="flow.chart.loader.ts" />
 
 

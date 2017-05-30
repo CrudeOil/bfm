@@ -1,5 +1,7 @@
 /// <reference path="flow.chart.ts" />
-/// <reference path="flow.objects.ts" />
+/// <reference path="flow.chart.objects.ts" />
+/// <reference path="flow.chart.util.ts" />
+
 
 
 namespace Flow {
@@ -125,7 +127,7 @@ namespace Flow {
 
             this.drawArrow(this.translateToCanvas(fromPos), this.translateToCanvas(toPos));
 
-            let p: Flow.IPoint = this.translateToCanvas({
+            let p: Flow.Point = this.translateToCanvas({
                 x: fromNode.getPos().x + (toNode.getPos().x - fromNode.getPos().x) / 2,
                 y: fromNode.getPos().y + (toNode.getPos().y - fromNode.getPos().y) / 2
             });
