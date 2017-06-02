@@ -60,12 +60,6 @@ namespace Flow {
             return newNode;
         }
 
-        public addNodeFromJson(name: string, node: INodeJson) {
-            let nodePos: Flow.Point = node.pos ? node.pos : new Flow.Point(0,0); // default to 0,0 if pos is not set
-            let newNode: Flow.Node = this.addNode(name, node.type, nodePos.x, nodePos.y);
-            newNode.setDescription(node.description);
-        }
-
         public addEdge(from: Node, to: Node, name: string): Edge {
             let newEdge: Edge = new Edge(from, to, name);
             this.edges.push(newEdge);
@@ -105,25 +99,6 @@ namespace Flow {
             }
         }
 
-        public load(chartJson: Flow.IChartJson): void {
-            let nodeNames: Array<string> = Object.keys(chartJson.nodes);
-            for (var i = 0; i < nodeNames.length; i++) {
-                this.addNodeFromJson(nodeNames[i], chartJson.nodes[nodeNames[i]]);
-            }
-            for (var i = 0; i < chartJson.edges.length; i++) {
-                if (chartJson.edges[i].fromNode in this.nodes && chartJson.edges[i].toNode in this.nodes) {
-                    this.addEdge(
-                        this.nodes[chartJson.edges[i].fromNode],
-                        this.nodes[chartJson.edges[i].toNode],
-                        chartJson.edges[i].name
-                    );
-                }
-            }
-
-            this.physicsHandler.setSettings(chartJson.settings.physicsSettings);
-            this.graphicsHandler.setSettings(chartJson.settings.viewSettings);
-        }
-
         public clear(): void {
             this.nodes = {};
             this.edges = [];
@@ -131,6 +106,12 @@ namespace Flow {
 
         public getCanvas(): HTMLCanvasElement {
             return this.canvas;
+        }
+
+        public setSettings(settings: Flow.IChartSettings) {
+            this.chartSettings = settings;
+            this.physicsHandler.setSettings(settings.physicsSettings);
+            this.graphicsHandler.setSettings(settings.viewSettings);
         }
 
         public getSettings(): Flow.IChartSettings {

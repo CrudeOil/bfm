@@ -143,6 +143,10 @@ namespace Flow {
                 toNode: this.toNode.name
             }
         }
+
+        public setDescription(description: string) {
+            this.description = description;
+        }
     }
 
     export enum NodeType {

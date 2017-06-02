@@ -9,7 +9,7 @@ $().ready(() => {
 
         flowChart = new Flow.Chart(canvas, bioInfoChart.settings);
 
-        flowChart.load(bioInfoChart);
+        Flow.LoadJson(flowChart, bioInfoChart);
 
         flowChart.onNodeDetails = (node: Flow.Node) => {
             $('#detailsPane').modal('show');
@@ -28,7 +28,7 @@ $().ready(() => {
             let chartJson = <Flow.IChartJson>JSON.parse(jsonText);
 
             flowChart.clear();
-            flowChart.load(chartJson);
+            Flow.LoadJson(flowChart, chartJson);
         }
 
         canvas.onkeyup = (e) => {
