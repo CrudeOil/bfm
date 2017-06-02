@@ -58,7 +58,7 @@ namespace Flow {
 
     export function AddNodeFromJson(chart: Flow.Chart, name: string, node: INodeJson) {
         let nodePos: Flow.Point = node.pos ? node.pos : new Flow.Point(0,0); // default to 0,0 if pos is not set
-        let newNode: Flow.Node = chart.addNode(name, node.type, nodePos.x, nodePos.y);
+        let newNode: Flow.ChartNode = chart.addNode(name, node.type, nodePos.x, nodePos.y);
         newNode.setDescription(node.description);
     }
 }

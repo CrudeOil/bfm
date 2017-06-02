@@ -18,9 +18,9 @@ namespace Flow {
         // movement of canvas and nodes
         private canvasDragStart: {x:number, y:number};
         private nodeDragStart: {x:number, y:number};
-        private selectedNodes: Array<Flow.Node> = []
-        private viewingNode: Flow.Node;
-        private viewingEdge: Flow.Edge;
+        private selectedNodes: Array<Flow.ChartNode> = []
+        private viewingNode: Flow.ChartNode;
+        private viewingEdge: Flow.ChartEdge;
         
         private state: Flow.ControlState;
 
@@ -249,7 +249,7 @@ namespace Flow {
             console.log(this.state);
         }
 
-        public getViewingNode(): Flow.Node {
+        public getViewingNode(): Flow.ChartNode {
             return this.viewingNode;
         }
     }

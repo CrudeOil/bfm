@@ -16,7 +16,7 @@ namespace Flow {
          * 
          * @memberOf PhysicsHandler
          */
-        public CalculateSpring(n1: Node, n2: Node, direction: number = 0): Flow.Vector {
+        public CalculateSpring(n1: ChartNode, n2: ChartNode, direction: number = 0): Flow.Vector {
             let dx = n1.getPos().x - n2.getPos().x;
             let dy = n1.getPos().y - n2.getPos().y;
             let d = Math.sqrt(dx**2 + dy**2);

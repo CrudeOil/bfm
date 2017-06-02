@@ -11,10 +11,10 @@ $().ready(() => {
 
         Flow.LoadJson(flowChart, bioInfoChart);
 
-        flowChart.onNodeDetails = (node: Flow.Node) => {
+        flowChart.onNodeDetails = (node: Flow.ChartNode) => {
             $('#detailsPane').modal('show');
-            $('#detailsTitle').text(node.name);
-            $('#detailsBody').html(window.markdownit().render(node.description));
+            $('#detailsTitle').text(node.getName());
+            $('#detailsBody').html(window.markdownit().render(node.getDescription()));
         }
 
         let jsonBtn = <HTMLLinkElement>document.getElementById('JsonBtn');
@@ -39,7 +39,7 @@ $().ready(() => {
                 $.get("http://setgetgo.com/randomword/get.php", (word: string) => {
                     // a
                     if (e.keyCode === 65) {
-                        let newNode: Flow.Node = flowChart.addNode(
+                        let newNode: Flow.ChartNode = flowChart.addNode(
                             word,
                             Flow.NodeType.other,
                             (Math.random() * (canvas.clientWidth)) - canvas.clientWidth/2,

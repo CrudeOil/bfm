@@ -60,7 +60,7 @@ namespace Flow {
             this.ctx.fillText(`${name}: ${text}`, 10, 10 + i * 20);
         }
 
-        private drawNode(node: Flow.Node) {
+        private drawNode(node: Flow.ChartNode) {
             let canvasPos = this.translateToCanvas(node.getPos());
             this.ctx.fillStyle = node.getColor();
             this.ctx.fillRect(
@@ -86,13 +86,13 @@ namespace Flow {
             this.ctx.font = `${textSize}px Consolas`;
             this.ctx.fillStyle = "#FFFFFF"
             this.ctx.fillText(
-                node.name,
+                node.getName(),
                 textPos.x,
                 textPos.y
             );
         }
 
-        private drawEdge(edge: Flow.Edge) {
+        private drawEdge(edge: Flow.ChartEdge) {
             switch (this.viewSettings.edgeType) {
                 case "polyline": 
                     this.drawPolyLineEdge(edge);
@@ -107,17 +107,17 @@ namespace Flow {
             }
         }
 
-        public drawPolyLineEdge(edge: Flow.Edge) {
+        public drawPolyLineEdge(edge: Flow.ChartEdge) {
 
         }
 
-        public drawOrthagonalEdge(edge: Flow.Edge) {
+        public drawOrthagonalEdge(edge: Flow.ChartEdge) {
 
         }
 
-        public drawDirectEdge(edge: Flow.Edge) {
-            let fromNode: Flow.Node = edge.getNodes()[0];
-            let toNode: Flow.Node = edge.getNodes()[1];
+        public drawDirectEdge(edge: Flow.ChartEdge) {
+            let fromNode: Flow.ChartNode = edge.getNodes()[0];
+            let toNode: Flow.ChartNode = edge.getNodes()[1];
 
             // is fromnode to left or right of tonode?
             let x = 0;
@@ -153,7 +153,7 @@ namespace Flow {
                 y: fromNode.getPos().y + (toNode.getPos().y - fromNode.getPos().y) / 2
             });
 
-            this.ctx.fillText(edge.name, p.x, p.y)
+            this.ctx.fillText(edge.getName(), p.x, p.y)
         }
 
         public drawArrow(
@@ -174,7 +174,7 @@ namespace Flow {
             let dist = Flow.Util.GetDist(from, to);
             let m = (to.y-from.y)/(to.x-from.x);
             // point along the arrow where the head will start
-            let p: Flow.Point = new Flow.Point(to.x - Flow.Edge.ARROWHEADLENGTH * d.x * this.viewScale / dist, to.y - Flow.Edge.ARROWHEADLENGTH * d.y * this.viewScale / dist);
+            let p: Flow.Point = new Flow.Point(to.x - Flow.ChartEdge.ARROWHEADLENGTH * d.x * this.viewScale / dist, to.y - Flow.ChartEdge.ARROWHEADLENGTH * d.y * this.viewScale / dist);
             this.ctx.lineTo(
                 p.x,
                 p.y
@@ -186,8 +186,8 @@ namespace Flow {
             this.ctx.moveTo(to.x, to.y);
             // we can use the aforementioned proportions again by using the x proportion on the y coordinate and vice-versa
             // this only works because the base of the arrowhead is perpendicular to the line.
-            this.ctx.lineTo(p.x - Flow.Edge.ARROWHEADWIDTH / 2 * d.y * this.viewScale / dist, p.y + Flow.Edge.ARROWHEADWIDTH / 2 * d.x * this.viewScale / dist);
-            this.ctx.lineTo(p.x + Flow.Edge.ARROWHEADWIDTH / 2 * d.y * this.viewScale / dist, p.y - Flow.Edge.ARROWHEADWIDTH / 2 * d.x * this.viewScale / dist);
+            this.ctx.lineTo(p.x - Flow.ChartEdge.ARROWHEADWIDTH / 2 * d.y * this.viewScale / dist, p.y + Flow.ChartEdge.ARROWHEADWIDTH / 2 * d.x * this.viewScale / dist);
+            this.ctx.lineTo(p.x + Flow.ChartEdge.ARROWHEADWIDTH / 2 * d.y * this.viewScale / dist, p.y - Flow.ChartEdge.ARROWHEADWIDTH / 2 * d.x * this.viewScale / dist);
             this.ctx.closePath();
             this.ctx.fill();
         }
