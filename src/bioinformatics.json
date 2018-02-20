@@ -38,7 +38,14 @@
             }
         },
         "BAM": {
-            "description": "BAM files contain information on mapped and unmapped reads after alignment. BAN files contain the same information as SAM files, but are binary-encoded as opposed to plain-text. This encoding results in a smaller filesize.",
+            "description": "BAM files contain information on mapped and unmapped reads after alignment. BAM files contain almost the same amount of information as SAM files, but are binary-encoded as opposed to plain-text. This encoding results in a smaller filesize. BAM files by themselves lack a header file that is included in the sam file. A seperate binary header can be extracted from SAM files using samtools. (See .BAI)",
+            "pos": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        "BAI": {
+            "description": "BAM index file. This file is needed to access reads randomly in a BAM file.",
             "pos": {
                 "x": 0,
                 "y": 0
@@ -73,7 +80,7 @@
         },
         {
             "name": "SAMTools",
-            "description": "BAM files can be converted to SAM files using SAMTools",
+            "description": "BAM files can be converted to SAM files using SAMTools.",
             "fromNode": "BAM",
             "toNode": "SAM"
         },
@@ -82,6 +89,12 @@
             "description": "SAM files can be converted to BAM files using SAMTools",
             "fromNode": "SAM",
             "toNode": "BAM"
+        },
+        {
+            "name": "SAMTools",
+            "description": "BAI files can be extracted from SAM files using SAMTools",
+            "fromNode": "SAM",
+            "toNode": "BAI"
         }
     ]
 }
