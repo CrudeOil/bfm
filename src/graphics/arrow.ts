@@ -37,8 +37,8 @@ export class Arrow extends Graphic {
         context.beginPath();
         context.moveTo(px, py);
         context.lineTo(tox, toy);
-        context.lineTo(tox - this.arrowHeadLength * fx + this.arrowHeadWidth / 2 * fy, toy - this.arrowHeadWidth / 2 * fx - this.arrowHeadLength * fy);
-        context.lineTo(tox - this.arrowHeadLength * fx - this.arrowHeadWidth / 2 * fy, toy + this.arrowHeadWidth / 2 * fx - this.arrowHeadLength * fy);
+        context.lineTo(tox - this.arrowHeadLength * fx * scale + this.arrowHeadWidth / 2 * fy * scale, toy - this.arrowHeadWidth / 2 * fx * scale - this.arrowHeadLength * fy * scale);
+        context.lineTo(tox - this.arrowHeadLength * fx * scale - this.arrowHeadWidth / 2 * fy * scale, toy + this.arrowHeadWidth / 2 * fx * scale - this.arrowHeadLength * fy * scale);
         context.lineTo(tox, toy);
         context.stroke();
         context.closePath();

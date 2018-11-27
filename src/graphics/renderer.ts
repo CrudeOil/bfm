@@ -26,7 +26,7 @@ export class Renderer {
             object.draw(this.context, this.zoomLevel);
         }
         this.cameraPosText.setText('x: ' + this.cameraPos.x + ' y: ' + this.cameraPos.y + ' z: ' + this.zoomLevel);
-        this.cameraPosText.draw(new Point(10 - this.cameraPos.x, 600 - this.cameraPos.y), this.context, this.zoomLevel);
+        this.cameraPosText.draw(new Point(10 - this.cameraPos.x, 600 - this.cameraPos.y), this.context, 1);
         this.context.restore();
         this.animationFrameHandle = requestAnimationFrame(this.renderFrame);
     }

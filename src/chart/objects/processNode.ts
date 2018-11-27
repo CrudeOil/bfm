@@ -25,6 +25,6 @@ export class ProcessNode extends MovableChartObject {
 
     public draw(context: CanvasRenderingContext2D, zoomLevel: number) {
         this.rect.draw(this.pos, context, zoomLevel, true);
-        this.text.draw(this.pos, context, 1, 'center');
+        this.text.draw(this.pos, context, zoomLevel, 'center');
     }
 }
