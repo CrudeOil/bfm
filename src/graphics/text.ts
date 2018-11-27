@@ -16,8 +16,9 @@ export class ChartText extends Graphic {
         this.text = text;
     }
 
-    public draw(pos: Point, context: CanvasRenderingContext2D, zoomLevel: number) {
+    public draw(pos: Point, context: CanvasRenderingContext2D, zoomLevel: number, textAlign: CanvasTextAlign = 'left') {
         context.fillStyle = this.color.valueOf();
+        context.textAlign = textAlign;
         context.fillText(this.text, pos.x, pos.y);
     }
 }
