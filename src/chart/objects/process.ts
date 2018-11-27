@@ -62,7 +62,7 @@ export class Process extends ChartObject {
         const len = this.sourceDataTypes.length + this.resultDataTypes.length;
         this.graphics = new Array<Line|Arrow>(len);
         for (var i = 0; i < len; i++) {
-            this.graphics[i] = new Line(new Color(Colors.black), 2);
+            this.graphics[i] = new Arrow(new Color(Colors.black), 2);
         }
     }
 }
