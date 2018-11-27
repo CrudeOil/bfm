@@ -29,25 +29,18 @@ export class Chart {
         this.objects = {};
     }
 
-    public addDataType(name: string): Promise<DataType> {
-        var promise = new Promise<DataType>((resolve, reject) => {
-            const obj = this.objectFactory.createDataType(name);
-            this.objects[obj.getGuid()] = obj;
-            resolve(obj);
-        });
-        return promise;
+    public addDataType(name: string): DataType {
+        const obj = this.objectFactory.createDataType(name);
+        this.objects[obj.getGuid()] = obj;
+        return obj;
     }
 
-    public removeObject(id: string): Promise<void> {
-        var promise = new Promise<void>((resolve, reject) => {
-            if (!this.objects[id]) {
-                reject();
-            } else {
-                delete this.objects[id];
-                resolve();
-            }
-        });
-        return promise;
+    public removeObject(id: string) {
+        if (!this.objects[id]) {
+            console.error(`Object with id ${id} not found in object list`);
+        } else {
+            delete this.objects[id];
+        }
     }
 
     public getObjects(): Array<ChartObject> {
