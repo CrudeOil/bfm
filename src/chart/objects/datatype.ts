@@ -1,9 +1,12 @@
 import { ChartObject } from './object';
 import { Point } from '../../common/point';
 import { Rect } from '../../graphics/rect';
+import { ChartText } from '../../graphics/text';
+import { Color, Colors } from '../../graphics/color';
 
 export class DataType extends ChartObject{
     private rect: Rect;
+    private text: ChartText;
 
     public constructor(
         guid: string,
@@ -13,9 +16,11 @@ export class DataType extends ChartObject{
         super(guid, pos);
 
         this.rect = new Rect(160, 50);
+        this.text = new ChartText(name, new Color(Colors.red));
     }
 
     public draw(context: CanvasRenderingContext2D, zoomLevel: number) {
         this.rect.draw(this.pos, context, zoomLevel, true);
+        this.text.draw(this.pos, context, 1);
     }
 }
