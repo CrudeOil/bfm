@@ -2,8 +2,6 @@ import { Graphic } from './graphic';
 import { Color, Colors } from '../graphics/color';
 import { Point } from '../common/point';
 
-
-
 export class ChartText extends Graphic {
     public constructor (
         private text = '',
@@ -16,7 +14,7 @@ export class ChartText extends Graphic {
         this.text = text;
     }
 
-    public draw(pos: Point, context: CanvasRenderingContext2D, zoomLevel: number, textAlign: CanvasTextAlign = 'left') {
+    public draw(pos: Point, context: CanvasRenderingContext2D, zoomLevel: number, textAlign: any = 'left') {
         context.fillStyle = this.color.valueOf();
         context.textAlign = textAlign;
         context.fillText(this.text, pos.x, pos.y);
