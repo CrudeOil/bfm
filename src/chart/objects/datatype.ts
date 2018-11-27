@@ -1,10 +1,10 @@
-import { ChartObject } from './object';
+import { MovableChartObject } from './movableObject';
 import { Point } from '../../common/point';
 import { Rect } from '../../graphics/rect';
 import { ChartText } from '../../graphics/text';
 import { Color, Colors } from '../../graphics/color';
 
-export class DataType extends ChartObject{
+export class DataType extends MovableChartObject{
     private rect: Rect;
     private text: ChartText;
 
