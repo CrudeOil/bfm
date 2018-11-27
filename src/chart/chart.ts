@@ -35,6 +35,12 @@ export class Chart {
         return obj;
     }
 
+    addProcess(shortDesc: string, longDesc: string, sourceDataTypes: Array<DataType>, resultDataTypes: Array<DataType>): any {
+        const obj = this.objectFactory.createProcess(shortDesc, longDesc, sourceDataTypes, resultDataTypes);
+        this.objects[obj.getGuid()] = obj;
+        return obj;
+    }
+
     public removeObject(id: string) {
         if (!this.objects[id]) {
             console.error(`Object with id ${id} not found in object list`);
