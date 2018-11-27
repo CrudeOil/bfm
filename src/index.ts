@@ -8,8 +8,8 @@ const chart = new Chart(context);
 
 chart.setCameraPos(new Point(canvas.clientWidth/2, canvas.clientHeight/2));
 
-const eggData = chart.addDataType('Eggs');
-const friedEggData = chart.addDataType('Fried eggs');
+const eggData = chart.addDataType('Eggs', new Point(-250, 0));
+const friedEggData = chart.addDataType('Fried eggs', new Point(250, 0));
 chart.addProcess('Fry', 'Fry the eggs in a pan!', [eggData], [friedEggData]);
 
 let zoom = 1;

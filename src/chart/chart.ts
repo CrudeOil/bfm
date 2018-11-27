@@ -29,8 +29,8 @@ export class Chart {
         this.objects = {};
     }
 
-    public addDataType(name: string): DataType {
-        const obj = this.objectFactory.createDataType(name);
+    public addDataType(name: string, pos?: Point): DataType {
+        const obj = this.objectFactory.createDataType(name, pos);
         this.objects[obj.getGuid()] = obj;
         return obj;
     }
