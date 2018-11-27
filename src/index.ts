@@ -12,6 +12,25 @@ chart.addDataType('test');
 
 let zoom = 1;
 
+let mouseDown = false;
+
+window.addEventListener('mousedown', (event: MouseEvent) => {
+    if (event.button === 0) {
+        mouseDown = true;
+    }
+});
+window.addEventListener('mouseup', (event: MouseEvent) => {
+    if (event.button === 0) {
+        mouseDown = false;
+    }
+});
+
+window.addEventListener('mousemove', (event: MouseEvent) => {
+    if (mouseDown) {
+        chart.moveCamera(-event.movementX, -event.movementY);
+    }
+});
+
 window.addEventListener('keydown', (event: KeyboardEvent) => {
     switch (event.key) {
         case 'z':
