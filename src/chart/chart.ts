@@ -35,8 +35,8 @@ export class Chart {
         return obj;
     }
 
-    addProcess(shortDesc: string, longDesc: string, sourceDataTypes: Array<DataType>, resultDataTypes: Array<DataType>): any {
-        const obj = this.objectFactory.createProcess(shortDesc, longDesc, sourceDataTypes, resultDataTypes);
+    addProcess(shortDesc: string, longDesc: string, sourceDataTypes: Array<DataType>, resultDataTypes: Array<DataType>, pos?: Point): any {
+        const obj = this.objectFactory.createProcess(shortDesc, longDesc, sourceDataTypes, resultDataTypes, pos);
         this.objects[obj.getGuid()] = obj;
         return obj;
     }

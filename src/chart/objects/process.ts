@@ -1,11 +1,11 @@
 import { DataType } from "./datatype";
 import { ChartObject } from "./object";
+import { ProcessNode } from './processNode';
 
 export class Process extends ChartObject {
     public constructor(
         guid: string,
-        private shortDesc: string,
-        private longDesc: string,
+        private processNode: ProcessNode,
         private sourceDataTypes: Array<DataType> = [],
         private resultDataTypes: Array<DataType> = []
     ) {
@@ -13,6 +13,6 @@ export class Process extends ChartObject {
     }
 
     public draw(context: CanvasRenderingContext2D, zoomLevel: number) {
-
+        this.processNode.draw(context, zoomLevel);
     }
 }
