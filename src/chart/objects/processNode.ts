@@ -4,6 +4,9 @@ import { Rect } from '../../graphics/rect';
 import { ChartText } from '../../graphics/text';
 import { Color, Colors } from '../../graphics/color';
 
+export const PROCESS_NODE_WIDTH = 160;
+export const PROCESS_NODE_HEIGHT = 50;
+
 export class ProcessNode extends MovableChartObject {
     private rect: Rect;
     private text: ChartText;
@@ -16,7 +19,7 @@ export class ProcessNode extends MovableChartObject {
     ) {
         super(guid, pos);
 
-        this.rect = new Rect(160, 50);
+        this.rect = new Rect(PROCESS_NODE_WIDTH, PROCESS_NODE_HEIGHT);
         this.text = new ChartText(this.shortDesc, new Color(Colors.red));
     }
 

@@ -4,6 +4,9 @@ import { Rect } from '../../graphics/rect';
 import { ChartText } from '../../graphics/text';
 import { Color, Colors } from '../../graphics/color';
 
+const DATA_TYPE_WIDTH = 160;
+const DATA_TYPE_HEIGHT = 50;
+
 export class DataType extends MovableChartObject{
     private rect: Rect;
     private text: ChartText;
@@ -15,7 +18,7 @@ export class DataType extends MovableChartObject{
     ) {
         super(guid, pos);
 
-        this.rect = new Rect(160, 50);
+        this.rect = new Rect(DATA_TYPE_WIDTH, DATA_TYPE_HEIGHT);
         this.text = new ChartText(name, new Color(Colors.red));
     }
 
