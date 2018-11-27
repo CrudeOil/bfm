@@ -20,9 +20,9 @@
         ],
         // totally increases readability
         "curly": true,
-        // gets rid of the passive-aggressive icon at the bottom of files on github
+        // gets rid of that damn icon at the bottom of files on github
         "eofline": true,
-        // go forth and argue
+        // the least controverial rule i think
         "indent": [
             true,
             "spaces"
@@ -35,7 +35,6 @@
         // consistency
         "jsdoc-format": true,
         "label-position": true,
-        // come on son
         "linebreak-style": [
             "LF"
         ],
@@ -45,13 +44,11 @@
         ],
         // i don't like change
         "new-parens": true,
-        // you're in bigger trouble than this linter when you need eval
+        // you have bigger problems than just linter problems if you find yourself using eval()
         "no-eval": true,
-        // use undefined instead
-        "no-null-keyword": true,
-        // json does not allow this, and neither should anything else
+        // i changed my mind.
         "trailing-comma": [
-            false
+            true
         ],
         // javascript why
         "triple-equals": [
