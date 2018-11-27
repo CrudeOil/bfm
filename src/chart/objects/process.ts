@@ -53,7 +53,7 @@ export class Process extends ChartObject {
                     tox = this.resultDataTypes[i].pos.x - DATA_TYPE_WIDTH / 2;
                 }
 
-                this.graphics[i + this.sourceDataTypes.length].draw(new Point(fromx, this.processNode.pos.x), context, zoomLevel, new Point(tox, this.sourceDataTypes[i].pos.y));
+                this.graphics[i + this.sourceDataTypes.length].draw(new Point(fromx, this.processNode.pos.x), context, zoomLevel, new Point(tox, this.resultDataTypes[i].pos.y));
             }
         }
     }
