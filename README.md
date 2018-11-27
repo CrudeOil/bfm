@@ -7,6 +7,7 @@ BioFlowMap is an interactive flowchart detailing the various data formats common
 ## Planned features
 In order to limit the scope of this project, five features are listed:
 
+* An at-least-ok renderer that doesn't take up a core of your CPU
 * Flowchart with basic data types and their conversion (FQ, FA, SAM, BAM, etc. Common data types)
 * Collections of popular applications for processing of above data
 * Interacting with flowchart to list details such as duration on steps or dependencies for methods
