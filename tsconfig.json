@@ -6,6 +6,9 @@
         "sourceMap": true
     },
     "include": [
-        "src/js/*.ts"
+        "src/*.ts"
+    ],
+    "exclude": [
+        "node_modules/**/*"
     ]
 }
