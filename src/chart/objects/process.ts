@@ -53,7 +53,7 @@ export class Process extends ChartObject {
                     tox = this.resultDataTypes[i].pos.x - DATA_TYPE_WIDTH / 2;
                 }
 
-                this.graphics[i + this.sourceDataTypes.length].draw(new Point(fromx, this.processNode.pos.x), context, zoomLevel, new Point(tox, this.sourceDataTypes[i].pos.y));
+                this.graphics[i + this.sourceDataTypes.length].draw(new Point(fromx, this.processNode.pos.x), context, zoomLevel, new Point(tox, this.resultDataTypes[i].pos.y));
             }
         }
     }
@@ -62,7 +62,7 @@ export class Process extends ChartObject {
         const len = this.sourceDataTypes.length + this.resultDataTypes.length;
         this.graphics = new Array<Line|Arrow>(len);
         for (var i = 0; i < len; i++) {
-            this.graphics[i] = new Line(new Color(Colors.black), 2);
+            this.graphics[i] = new Arrow(new Color(Colors.black), 2);
         }
     }
 }

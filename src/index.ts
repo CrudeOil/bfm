@@ -8,9 +8,11 @@ const chart = new Chart(context);
 
 chart.setCameraPos(new Point(canvas.clientWidth/2, canvas.clientHeight/2));
 
-const eggData = chart.addDataType('Eggs', new Point(-250, 0));
-const friedEggData = chart.addDataType('Fried eggs', new Point(250, 0));
-chart.addProcess('Fry', 'Fry the eggs in a pan!', [eggData], [friedEggData]);
+const beefData = chart.addDataType('beef', new Point(-250, 250));
+const beanData = chart.addDataType('beans', new Point(-250, 0));
+const spiceData = chart.addDataType('Spices', new Point(-250, -250));
+const chiliData = chart.addDataType('Delicious chili', new Point(250, 0));
+chart.addProcess('Cook', 'Cook!', [beefData, beanData, spiceData], [chiliData]);
 
 let zoom = 1;
 
