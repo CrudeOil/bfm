@@ -18,7 +18,7 @@ export class Process extends ChartObject {
     ) {
         super(guid);
 
-        this.dataTypesChanged();
+        this.generateDataTypeGraphics();
     }
 
     public draw(context: CanvasRenderingContext2D, zoomLevel: number) {
@@ -42,7 +42,7 @@ export class Process extends ChartObject {
                     tox = this.processNode.pos.x + PROCESS_NODE_WIDTH / 2;
                 }
 
-                this.graphics[i].draw(new Point(fromx, this.sourceDataTypes[i].pos.y), context, zoomLevel, new Point(tox, this.processNode.pos.x));
+                this.graphics[i].draw(new Point(fromx, this.sourceDataTypes[i].pos.y), context, zoomLevel, new Point(tox, this.processNode.pos.y));
             }
             for (var i = 0; i < this.resultDataTypes.length; i++) {
                 if (this.resultDataTypes[i].pos.x < this.processNode.pos.x) {
@@ -53,16 +53,26 @@ export class Process extends ChartObject {
                     tox = this.resultDataTypes[i].pos.x - DATA_TYPE_WIDTH / 2;
                 }
 
-                this.graphics[i + this.sourceDataTypes.length].draw(new Point(fromx, this.processNode.pos.x), context, zoomLevel, new Point(tox, this.resultDataTypes[i].pos.y));
+                this.graphics[i + this.sourceDataTypes.length].draw(new Point(fromx, this.processNode.pos.y), context, zoomLevel, new Point(tox, this.resultDataTypes[i].pos.y));
             }
         }
     }
 
-    public dataTypesChanged() {
+    public generateDataTypeGraphics() {
         const len = this.sourceDataTypes.length + this.resultDataTypes.length;
         this.graphics = new Array<Line|Arrow>(len);
         for (var i = 0; i < len; i++) {
             this.graphics[i] = new Arrow(new Color(Colors.black), 2);
         }
+    }
+
+    public onDataTypesChanged = () => {};
+
+    public getProcessNodeObject() {
+        return this.processNode;
+    }
+
+    public setNodePos(p: Point) {
+        this.processNode.setPos(p);
     }
 }

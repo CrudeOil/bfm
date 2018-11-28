@@ -12,7 +12,21 @@ const beefData = chart.addDataType('beef', new Point(-250, 250));
 const beanData = chart.addDataType('beans', new Point(-250, 0));
 const spiceData = chart.addDataType('Spices', new Point(-250, -250));
 const chiliData = chart.addDataType('Delicious chili', new Point(250, 0));
-chart.addProcess('Cook', 'Cook!', [beefData, beanData, spiceData], [chiliData]);
+
+const cookProcess = chart.addProcess('Cook', 'Cook!', [beefData, beanData, spiceData], [chiliData]);
+
+let wavyChili = () => {
+    beefData.setPos(new Point(-250, -250 + Math.sin((Date.now()%2000/2000)*Math.PI*2) * 10));
+    beanData.setPos(new Point(-250, Math.sin(((Date.now() + 600)%2000/2000)*Math.PI*2) * 10));
+    spiceData.setPos(new Point(-250, 250 + Math.sin(((Date.now() + 1200)%2000/2000)*Math.PI*2) * 10));
+
+    cookProcess.setNodePos(new Point(0, Math.sin(((Date.now()+300)%2000/2000)*Math.PI*2) * 10))
+
+    chiliData.setPos(new Point(250, Math.sin(((Date.now() + 1500)%2000/2000)*Math.PI*2) * 10));
+
+    requestAnimationFrame(wavyChili);
+}
+requestAnimationFrame(wavyChili);
 
 let zoom = 1;
 
