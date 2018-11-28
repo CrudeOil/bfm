@@ -4,6 +4,7 @@ import { DataType } from '../chart/objects/datatype';
 
 import { Renderer } from '../graphics/renderer';
 import { Point } from '../common/point';
+import { Process } from './objects/process';
 
 export class Chart {
     private objectFactory: ObjectFactory;
@@ -23,21 +24,34 @@ export class Chart {
         canvasResized();
 
         this.renderer = new Renderer(this, context);
-        this.renderer.start();
 
         this.objectFactory = new ObjectFactory(this.renderer);
         this.objects = {};
+
+        this.renderer.repaint();
     }
 
     public addDataType(name: string, pos?: Point): DataType {
         const obj = this.objectFactory.createDataType(name, pos);
         this.objects[obj.getGuid()] = obj;
+
+        obj.onMoved = () => {
+            this.renderer.repaint();
+        }
+
+        this.renderer.repaint();
         return obj;
     }
 
-    addProcess(shortDesc: string, longDesc: string, sourceDataTypes: Array<DataType>, resultDataTypes: Array<DataType>, pos?: Point): any {
+    addProcess(shortDesc: string, longDesc: string, sourceDataTypes: Array<DataType>, resultDataTypes: Array<DataType>, pos?: Point): Process {
         const obj = this.objectFactory.createProcess(shortDesc, longDesc, sourceDataTypes, resultDataTypes, pos);
         this.objects[obj.getGuid()] = obj;
+
+        obj.getProcessNodeObject().onMoved = () => {
+            this.renderer.repaint();
+        }
+
+        this.renderer.repaint();
         return obj;
     }
 

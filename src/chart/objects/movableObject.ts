@@ -10,7 +10,10 @@ export class MovableChartObject extends ChartObject {
         super(guid);
     }
 
+    public onMoved: Function = () => {};
+
     public setPos(pos: Point) {
         this.pos = pos;
+        this.onMoved();
     }
 }
