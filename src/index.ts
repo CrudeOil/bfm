@@ -24,9 +24,11 @@ let wavyChili = () => {
 
     chiliData.setPos(new Point(250, Math.sin(((Date.now() + 1500)%2000/2000)*Math.PI*2) * 10));
 
-    requestAnimationFrame(wavyChili);
+    if (rafHandle) {
+        rafHandle = requestAnimationFrame(wavyChili);
+    }
 }
-requestAnimationFrame(wavyChili);
+let rafHandle = requestAnimationFrame(wavyChili);
 
 let zoom = 1;
 
@@ -67,6 +69,14 @@ window.addEventListener('keydown', (event: KeyboardEvent) => {
             break;
         case 'ArrowDown':
             chart.moveCamera(0, 10);
+            break;
+        case 'p':
+            if (rafHandle) {
+                cancelAnimationFrame(rafHandle);
+                rafHandle = undefined;
+            } else {
+                rafHandle = requestAnimationFrame(wavyChili);
+            }
             break;
     }
 });
