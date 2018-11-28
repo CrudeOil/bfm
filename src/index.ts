@@ -15,6 +15,7 @@ const chiliData = chart.addDataType('Delicious chili', new Point(250, 0));
 
 const cookProcess = chart.addProcess('Cook', 'Cook!', [beefData, beanData, spiceData], [chiliData]);
 
+let rafHandle: number;
 let wavyChili = () => {
     beefData.setPos(new Point(-250, -250 + Math.sin((Date.now()%2000/2000)*Math.PI*2) * 10));
     beanData.setPos(new Point(-250, Math.sin(((Date.now() + 600)%2000/2000)*Math.PI*2) * 10));
@@ -28,7 +29,6 @@ let wavyChili = () => {
         rafHandle = requestAnimationFrame(wavyChili);
     }
 }
-let rafHandle = requestAnimationFrame(wavyChili);
 
 let zoom = 1;
 
@@ -70,7 +70,7 @@ window.addEventListener('keydown', (event: KeyboardEvent) => {
         case 'ArrowDown':
             chart.moveCamera(0, 10);
             break;
-        case 'p':
+        case 'w':
             if (rafHandle) {
                 cancelAnimationFrame(rafHandle);
                 rafHandle = undefined;
