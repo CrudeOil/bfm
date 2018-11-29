@@ -1,5 +1,7 @@
 # bfm
-BioFlowMap: An interactive overview of bioinformatics data
+BioFlowMap: An interactive overview of bioinformatics data  
+  
+A live version of this project is available at https://croil.net/bfm and will be updated until I don't want to maintain it anymore.
 
 ## Summary
 BioFlowMap is an interactive flowchart detailing the various data formats commonly used in bioinformatics and what paths are available to convert between them. This tool is mainly meant to be used to teach new bioinformatics students the relations between various data formats and to facilitate building new workflows for analysis projects.
